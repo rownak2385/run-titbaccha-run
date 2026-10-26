@@ -64,12 +64,6 @@ export const LetterAssemblyModal: React.FC<LetterAssemblyModalProps> = ({
           <div className="w-full mt-4 flex flex-col items-center animate-fadeIn">
             {/* Parchment Styled Letter Container */}
             <div className="w-full max-w-xl rounded-2xl border-2 border-amber-600/60 bg-[#fef9c3]/95 p-6 md:p-8 text-stone-900 shadow-2xl space-y-3.5 my-2">
-              <div className="border-b border-amber-900/20 pb-2 text-center">
-                <span className="text-[11px] font-bold text-amber-900/70 tracking-widest uppercase">
-                  (Temporary Placeholder — Author Text Integration Hook)
-                </span>
-              </div>
-
               {STORY_DATA.ASSEMBLED_LETTER_BODY.map((paragraph, idx) => (
                 <p
                   key={idx}
