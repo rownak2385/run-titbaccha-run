@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState } from "react";
@@ -33,35 +34,15 @@ export const SunsetEndingModal: React.FC<SunsetEndingModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fadeIn">
       <div className="relative flex max-h-[94vh] w-full max-w-3xl flex-col items-center rounded-3xl border-2 border-amber-400/50 bg-gradient-to-b from-amber-950 via-stone-950 to-stone-900 p-6 md:p-10 text-stone-100 shadow-2xl overflow-y-auto">
         {/* Sunset Silhouette Art Representation */}
-        <div className="relative flex h-48 w-full max-w-xl flex-col items-center justify-between rounded-2xl overflow-hidden bg-gradient-to-t from-amber-600 via-rose-600 to-indigo-950 p-4 shadow-inner border border-amber-300/40">
-          {/* Glowing Golden Sun */}
-          <div className="absolute top-10 h-24 w-24 rounded-full bg-amber-200/90 blur-sm shadow-2xl" />
-          <div className="absolute top-12 h-20 w-20 rounded-full bg-yellow-100 shadow-inner" />
-
-          {/* Shimmering Ocean Horizon */}
-          <div className="absolute bottom-10 left-0 right-0 h-10 bg-gradient-to-b from-amber-400/60 to-indigo-950/80" />
-
-          {/* Grassy Cliff Silhouette with Ronny & Titi Sitting Together */}
-          <div className="absolute bottom-0 left-0 right-0 h-14 bg-stone-950 rounded-t-3xl flex items-center justify-center gap-6">
-            {/* Ronny Silhouette with glowing leaf pendant */}
-            <div className="relative flex flex-col items-center">
-              <div className="h-6 w-5 rounded-full bg-stone-800" />
-              <div className="h-7 w-8 rounded-t-lg bg-stone-900" />
-              {/* Glowing necklace */}
-              <div className="absolute top-5 h-2 w-2 rounded-full bg-emerald-400 blur-[1px] animate-pulse" />
-            </div>
-
-            {/* Five-Rose Bouquet between them */}
-            <div className="text-sm">💐</div>
-
-            {/* Titi Chick Silhouette with glowing leaf pendant */}
-            <div className="relative flex flex-col items-center">
-              <div className="h-5 w-5 rounded-full bg-stone-800" />
-              <div className="h-4 w-5 rounded-t-md bg-stone-900" />
-              {/* Glowing necklace */}
-              <div className="absolute top-4 h-2 w-2 rounded-full bg-emerald-400 blur-[1px] animate-pulse" />
-            </div>
-          </div>
+        <div className="relative aspect-video w-full max-w-xl flex flex-col items-center justify-between rounded-2xl overflow-hidden bg-stone-950 shadow-inner border border-amber-300/40">
+          <img
+            src="/assets/story/15_sunset_ending_20261026210119.jpg"
+            alt="Sunset Reunion Ending"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.currentTarget as HTMLElement).style.display = "none";
+            }}
+          />
         </div>
 
         {/* Epic Title & The End */}

@@ -1,9 +1,30 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { SaveSystem } from "@/game/systems/SaveSystem";
 import { ChapterManager } from "@/game/systems/ChapterManager";
+import { STORY_DATA, STORY_IMAGES, StoryPanelData } from "@/game/data/StoryData";
+import { IllustratedStoryPanel } from "./IllustratedStoryPanel";
 import { SaveData } from "@/types/game";
+
+const STORY_GALLERY_ITEMS = [
+  { id: "prologue_friendship", number: 1, title: "1. Days of Sunshine", subtitle: "The Peaceful Family Garden", src: STORY_IMAGES.PEACEFUL_GARDEN },
+  { id: "meteor_disaster", number: 2, title: "2. The Shattered Sky", subtitle: "Celestial Cataclysm", src: STORY_IMAGES.METEOR_DISASTER },
+  { id: "ch1_betrayal", number: 3, title: "3. Waiting with Feed", subtitle: "Chapter 1 Campsite", src: STORY_IMAGES.RONNY_WAITING },
+  { id: "ch1_betrayal", number: 4, title: "4. The Fox's Deceit", subtitle: "Golden Berry Bait", src: STORY_IMAGES.FOX_BETRAYAL },
+  { id: "ch1_betrayal", number: 5, title: "5. Ronny's Departure", subtitle: "Heartbreak in the Wild", src: STORY_IMAGES.RONNY_LEAVING },
+  { id: "ch2_search", number: 6, title: "6. The Search Begins", subtitle: "Trail of Heart Seeds", src: STORY_IMAGES.SEARCH_HEARTS },
+  { id: "ch3_memory_photo", number: 7, title: "7. Whispering Canopy", subtitle: "Ancient Oak Branches", src: STORY_IMAGES.FOREST_MEMORY },
+  { id: "ch3_memory_photo", number: 8, title: "8. The Restored Keepsake", subtitle: "First Day Together", src: STORY_IMAGES.MEMORY_PHOTO },
+  { id: "ch4_dark_cave", number: 9, title: "9. Subterranean Cavern", subtitle: "Torchlight & Ticket Fragments", src: STORY_IMAGES.DARK_CAVE },
+  { id: "ch5_moving_train", number: 10, title: "10. Highland Express", subtitle: "Rooftop Platforming", src: STORY_IMAGES.MOVING_TRAIN },
+  { id: "ch6_seaside_explosion", number: 11, title: "11. The Coastal Terminus", subtitle: "Finding Ronny's Pack", src: STORY_IMAGES.SEASIDE_ARRIVAL },
+  { id: "ch6_seaside_explosion", number: 12, title: "12. Engine Boiler Eruption", subtitle: "The Coastal Route Map", src: STORY_IMAGES.EXPLOSION_MAP },
+  { id: "ch7_necklace_glow", number: 13, title: "13. The Radiant Necklaces", subtitle: "Pulsing Emerald Auras", src: STORY_IMAGES.NECKLACE_GLOW },
+  { id: "ch7_reunion_hug", number: 14, title: "14. The Five-Rose Offering", subtitle: "A Long-Awaited Embrace", src: STORY_IMAGES.ROSE_REUNION },
+  { id: "sunset_ending", number: 15, title: "15. Eternal Sunset", subtitle: "Sitting Together Forever", src: STORY_IMAGES.SUNSET_ENDING },
+];
 
 interface TitleMenuProps {
   onStartGame: (isNew: boolean) => void;
@@ -21,6 +42,8 @@ export const TitleMenu: React.FC<TitleMenuProps> = ({
   const [saveData, setSaveData] = useState<SaveData | null>(null);
   const [showConfirmNew, setShowConfirmNew] = useState(false);
   const [showChapterSelect, setShowChapterSelect] = useState(false);
+  const [showStoryGallery, setShowStoryGallery] = useState(false);
+  const [activeStory, setActiveStory] = useState<StoryPanelData | null>(null);
 
   useEffect(() => {
     const loaded = SaveSystem.load();
@@ -169,6 +192,14 @@ export const TitleMenu: React.FC<TitleMenuProps> = ({
             </button>
           )}
 
+          {/* Storybook Gallery */}
+          <button
+            onClick={() => setShowStoryGallery(true)}
+            className="w-full rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 py-2.5 px-6 font-bold text-sm text-stone-950 shadow transition-all active:scale-95 border border-amber-300"
+          >
+            📖 Story Gallery (15 Scenes)
+          </button>
+
           {/* Controls */}
           <button
             onClick={onOpenControls}
@@ -288,6 +319,89 @@ export const TitleMenu: React.FC<TitleMenuProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Storybook Gallery Modal (15 Scenes) */}
+      {showStoryGallery && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in"
+          onClick={() => setShowStoryGallery(false)}
+        >
+          <div
+            className="w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl border border-amber-500/40 bg-stone-900 p-6 text-stone-100 shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+              <div>
+                <h3 className="text-xl font-black text-amber-400 flex items-center gap-2">
+                  <span>📖</span>
+                  <span>The 15 Storybook Illustrations</span>
+                </h3>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  Click any moment to view its full illustrated story card:
+                </p>
+              </div>
+              <button
+                onClick={() => setShowStoryGallery(false)}
+                className="rounded-full bg-stone-800 px-3 py-1 text-xs font-bold text-stone-400 hover:bg-stone-700 hover:text-white"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto pr-1">
+              {STORY_GALLERY_ITEMS.map((item) => (
+                <button
+                  key={item.number}
+                  onClick={() => {
+                    const panel = STORY_DATA.STORY_PANELS[item.id] || STORY_DATA.STORY_PANELS.ch1_betrayal;
+                    setActiveStory({
+                      ...panel,
+                      illustrationSrc: item.src,
+                    });
+                  }}
+                  className="flex flex-col overflow-hidden rounded-xl border border-stone-700/80 bg-stone-800/80 hover:border-amber-400/80 hover:bg-stone-800 transition active:scale-95 group text-left"
+                >
+                  <div className="relative aspect-video w-full overflow-hidden bg-stone-950 flex items-center justify-center">
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-full object-contain group-hover:scale-105 transition-all duration-300"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  </div>
+                  <div className="p-2.5">
+                    <span className="text-[11px] font-bold text-amber-300 block line-clamp-1">
+                      {item.title}
+                    </span>
+                    <span className="text-[10px] text-stone-400 block line-clamp-1 mt-0.5">
+                      {item.subtitle}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-4 border-t border-stone-800 pt-3 flex justify-end">
+              <button
+                onClick={() => setShowStoryGallery(false)}
+                className="rounded-xl bg-stone-800 px-5 py-2 text-xs font-semibold text-stone-300 hover:bg-stone-700"
+              >
+                Close Gallery
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Active Story Reader Overlay */}
+      {activeStory && (
+        <IllustratedStoryPanel
+          story={activeStory}
+          onComplete={() => setActiveStory(null)}
+        />
       )}
     </div>
   );

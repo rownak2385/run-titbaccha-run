@@ -7,6 +7,7 @@ interface PauseModalProps {
   onResume: () => void;
   onRestartCheckpoint: () => void;
   onExitToMenu: () => void;
+  onOpenStory?: () => void;
 }
 
 export const PauseModal: React.FC<PauseModalProps> = ({
@@ -14,6 +15,7 @@ export const PauseModal: React.FC<PauseModalProps> = ({
   onResume,
   onRestartCheckpoint,
   onExitToMenu,
+  onOpenStory,
 }) => {
   if (!isOpen) return null;
 
@@ -37,6 +39,14 @@ export const PauseModal: React.FC<PauseModalProps> = ({
           >
             ▶ Resume Game
           </button>
+          {onOpenStory && (
+            <button
+              onClick={onOpenStory}
+              className="w-full rounded-xl bg-stone-800 py-2.5 font-semibold text-amber-300 border border-amber-500/30 hover:bg-stone-700 active:scale-98 transition-all"
+            >
+              📖 View Illustrated Story
+            </button>
+          )}
           <button
             onClick={onRestartCheckpoint}
             className="w-full rounded-xl bg-stone-800 py-2.5 font-semibold text-amber-300 border border-amber-500/30 hover:bg-stone-700 active:scale-98 transition-all"

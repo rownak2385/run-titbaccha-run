@@ -19,6 +19,12 @@ export const IllustratedStoryPanel: React.FC<IllustratedStoryPanelProps> = ({
   const totalPages = story.pages.length;
   const isLastPage = currentPage === totalPages - 1;
   const page = story.pages[currentPage];
+  const currentIllustration = page?.illustrationSrc || story.illustrationSrc;
+
+  // Reset image error state when navigating to a new page or story
+  useEffect(() => {
+    setImageFailed(false);
+  }, [currentPage, story]);
 
   const handleNext = useCallback(() => {
     if (isLastPage) {
@@ -349,12 +355,13 @@ export const IllustratedStoryPanel: React.FC<IllustratedStoryPanelProps> = ({
         </div>
 
         {/* Visual Illustration Area */}
-        <div className="relative aspect-[16/9] w-full max-h-72 overflow-hidden bg-stone-950">
-          {!imageFailed && story.illustrationSrc ? (
+        <div className="relative aspect-video w-full max-h-80 overflow-hidden bg-stone-950 flex items-center justify-center">
+          {!imageFailed && currentIllustration ? (
             <img
-              src={story.illustrationSrc}
-              alt={story.chapterTitle}
-              className="w-full h-full object-cover"
+              key={currentIllustration}
+              src={currentIllustration}
+              alt={`${story.chapterTitle} - Page ${currentPage + 1}`}
+              className="w-full h-full object-contain bg-stone-950"
               onError={() => setImageFailed(true)}
             />
           ) : (

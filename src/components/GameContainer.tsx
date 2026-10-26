@@ -393,6 +393,21 @@ export const GameContainer: React.FC<GameContainerProps> = ({
     setIsCutsceneOpen(true);
   }, []);
 
+  const handleOpenCurrentStory = useCallback(() => {
+    setIsPaused(false);
+    const currentCh = hudState.chapter;
+    const panelKey =
+      currentCh === 1 ? "ch1_betrayal" :
+      currentCh === 2 ? "ch2_search" :
+      currentCh === 3 ? "ch3_memory_photo" :
+      currentCh === 4 ? "ch4_dark_cave" :
+      currentCh === 5 ? "ch5_moving_train" :
+      currentCh === 6 ? "ch6_seaside_explosion" :
+      "ch7_necklace_glow";
+    const story = STORY_DATA.STORY_PANELS[panelKey] || STORY_DATA.STORY_PANELS.ch1_betrayal;
+    setActiveStory(story);
+  }, [hudState.chapter]);
+
   const handleContinueNextChapter = useCallback(() => {
     setIsCutsceneOpen(false);
     setActiveCinematic(null);
@@ -493,6 +508,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({
           onResume={handleResume}
           onRestartCheckpoint={handleRestartCheckpoint}
           onExitToMenu={onExitToMenu}
+          onOpenStory={handleOpenCurrentStory}
         />
 
         <ControlsModal
