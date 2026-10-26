@@ -26,11 +26,11 @@ export interface HeartConfig {
   y: number;
 }
 
-export interface ArrowBundleConfig {
+export interface MapPieceConfig {
   id: string;
   x: number;
   y: number;
-  amount: number;
+  label: string;
 }
 
 export interface Chapter6LevelDefinition {
@@ -43,8 +43,7 @@ export interface Chapter6LevelDefinition {
   ronnyBag: { x: number; y: number };
   trainWreckage: { x: number; y: number };
   hearts: HeartConfig[];
-  arrowBundles: ArrowBundleConfig[];
-  enemies: EnemyConfig[];
+  mapPieces: MapPieceConfig[];
   waypointPositions: { x: number; y: number }[];
   checkpoints: CheckpointData[];
   chest: { x: number; y: number };
@@ -145,121 +144,13 @@ export const CHAPTER_6_LEVEL_DATA: Chapter6LevelDefinition = {
     { id: "ch6_heart_06", x: 6400, y: 410 },
   ],
 
-  // Arrow Bundles
-  arrowBundles: [
-    { id: "ch6_arrows_01", x: 1450, y: 600, amount: 5 },
-    { id: "ch6_arrows_02", x: 2700, y: 600, amount: 5 },
-    { id: "ch6_arrows_03", x: 3700, y: 600, amount: 5 },
-    { id: "ch6_arrows_04", x: 4850, y: 600, amount: 5 },
-    { id: "ch6_arrows_05", x: 6050, y: 600, amount: 5 },
-  ],
-
-  // Enemies:
-  // 1. Wolves (drop vitality hearts)
-  // 2. Flying Dinosaurs (drop arrows)
-  // 3. Exactly 4 Crag Monsters dropping Destination Map Pieces 01 to 04!
-  enemies: [
-    // Wolf 1
-    {
-      id: "ch6_wolf_01",
-      x: 1650,
-      y: 600,
-      archetype: "wolf",
-      patrolMinX: 1450,
-      patrolMaxX: 1900,
-      maxHp: 50,
-      speed: 80,
-      dropItemType: "heart",
-    },
-    // Map Monster 1 (Drops Map Piece 01)
-    {
-      id: "ch6_monster_01",
-      x: 2050,
-      y: 590,
-      archetype: "monster",
-      patrolMinX: 1900,
-      patrolMaxX: 2180,
-      maxHp: 80,
-      speed: 45,
-      dropItemId: "map_piece_01",
-      dropItemType: "map",
-    },
-    // Flying Dinosaur 1
-    {
-      id: "ch6_dino_01",
-      x: 2750,
-      y: 420,
-      archetype: "dinosaur",
-      patrolMinX: 2500,
-      patrolMaxX: 3000,
-      maxHp: 50,
-      speed: 105,
-      dropItemType: "arrow",
-    },
-    // Map Monster 2 (Drops Map Piece 02)
-    {
-      id: "ch6_monster_02",
-      x: 3100,
-      y: 590,
-      archetype: "monster",
-      patrolMinX: 2950,
-      patrolMaxX: 3280,
-      maxHp: 80,
-      speed: 45,
-      dropItemId: "map_piece_02",
-      dropItemType: "map",
-    },
-    // Wolf 2
-    {
-      id: "ch6_wolf_02",
-      x: 3750,
-      y: 600,
-      archetype: "wolf",
-      patrolMinX: 3550,
-      patrolMaxX: 4000,
-      maxHp: 50,
-      speed: 85,
-      dropItemType: "heart",
-    },
-    // Map Monster 3 (Drops Map Piece 03)
-    {
-      id: "ch6_monster_03",
-      x: 4350,
-      y: 590,
-      archetype: "monster",
-      patrolMinX: 4150,
-      patrolMaxX: 4480,
-      maxHp: 80,
-      speed: 45,
-      dropItemId: "map_piece_03",
-      dropItemType: "map",
-    },
-    // Flying Dinosaur 2
-    {
-      id: "ch6_dino_02",
-      x: 4950,
-      y: 410,
-      archetype: "dinosaur",
-      patrolMinX: 4750,
-      patrolMaxX: 5200,
-      maxHp: 50,
-      speed: 110,
-      dropItemType: "arrow",
-    },
-    // Map Monster 4 (Drops Map Piece 04)
-    {
-      id: "ch6_monster_04",
-      x: 5550,
-      y: 590,
-      archetype: "monster",
-      patrolMinX: 5350,
-      patrolMaxX: 5680,
-      maxHp: 80,
-      speed: 45,
-      dropItemId: "map_piece_04",
-      dropItemType: "map",
-    },
-  ],
+  // Exactly 4 Unique Reachable Destination Map Fragments (Combat-Free Exploration)
+  mapPieces: [
+    { id: "map_piece_01", x: 1750, y: 410, label: "Map Fragment 1 of 4" },
+    { id: "map_piece_02", x: 2900, y: 400, label: "Map Fragment 2 of 4" },
+    { id: "map_piece_03", x: 4100, y: 400, label: "Map Fragment 3 of 4" },
+    { id: "map_piece_04", x: 5300, y: 390, label: "Map Fragment 4 of 4" },
+  ] as MapPieceConfig[],
 
   // Glowing waypoints that become active once the 4-piece map is assembled
   waypointPositions: [

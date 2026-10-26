@@ -5,22 +5,15 @@ import { PlayerController } from "../systems/PlayerController";
 import { SaveSystem } from "../systems/SaveSystem";
 import { SoundEffects } from "../systems/SoundEffects";
 import { MovingPlatform } from "../objects/MovingPlatform";
-import { BowSystem } from "../systems/BowSystem";
-import { Enemy } from "../objects/Enemy";
 import { PuzzleManager } from "../systems/PuzzleManager";
 import { CHAPTER_6_LEVEL_DATA } from "../data/Chapter6LevelData";
 
 export class Chapter6DestinationScene extends Phaser.Scene {
-  private player!: PlayerController;
+  public player!: PlayerController;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];
   private hazards!: Phaser.Physics.Arcade.StaticGroup;
-
-  // Combat System
-  private bowSystem!: BowSystem;
-  private enemiesGroup!: Phaser.Physics.Arcade.Group;
-  private enemiesList: Enemy[] = [];
 
   // Parallax Backgrounds
   private bgSky!: Phaser.GameObjects.TileSprite;
@@ -32,7 +25,9 @@ export class Chapter6DestinationScene extends Phaser.Scene {
   private hasTriggeredExplosion: boolean = false;
   private smokeEmitter?: Phaser.GameObjects.Particles.ParticleEmitter;
 
-  // Destination Map Waypoints
+  // Destination Map Waypoints & Pickups
+  private mapPickupsGroup!: Phaser.Physics.Arcade.Group;
+  private mapPieceSprites: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
   private waypointSprites: Phaser.GameObjects.Sprite[] = [];
   private summitGateBarrier?: Phaser.Physics.Arcade.Sprite;
 
@@ -42,7 +37,6 @@ export class Chapter6DestinationScene extends Phaser.Scene {
 
   // Pickups
   private heartPickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
-  private arrowBundlePickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
 
   // End Chest
   private chestSprite!: Phaser.GameObjects.Sprite;
@@ -130,11 +124,7 @@ export class Chapter6DestinationScene extends Phaser.Scene {
       this.player.setHealth(currentSave.health);
     }
 
-    // 8. Bow & Combat System
-    this.bowSystem = new BowSystem(this, this.player.sprite);
-    this.bowSystem.setupPlatformCollisions(this.platforms);
-
-    // 9. Opening Train Engine & Explosion Setup
+    // 8. Opening Train Engine & Explosion Setup
     const trainLoc = CHAPTER_6_LEVEL_DATA.trainWreckage;
     this.trainWreckageSprite = this.add
       .sprite(trainLoc.x, trainLoc.y, currentSave?.trainExploded ? "train-wreckage-exploded" : "train-engine-roof")
@@ -154,15 +144,13 @@ export class Chapter6DestinationScene extends Phaser.Scene {
         if (!this.ronnyBagSprite) return;
 
         SaveSystem.collectItem(GAME_CONSTANTS.IDENTIFIERS.RONNY_BAG_ID);
-        SaveSystem.addArrows(15);
         this.player.heal(100); // Full vitality restoration
         SoundEffects.playFanfare();
 
         EventBus.emit(GAME_EVENTS.ITEM_COLLECTED, GAME_CONSTANTS.IDENTIFIERS.RONNY_BAG_ID, "Ronny's Traveler Pack");
-        EventBus.emit(GAME_EVENTS.AMMO_UPDATED, SaveSystem.load()?.arrowCount || 25);
         EventBus.emit(
           GAME_EVENTS.NOTIFICATION,
-          "🎒 Found Ronny's Traveling Pack! Restored Full Vitality & +15 Arrows!"
+          "🎒 Found Ronny's Traveling Pack! Restored Full Vitality!"
         );
 
         this.tweens.add({
@@ -184,33 +172,52 @@ export class Chapter6DestinationScene extends Phaser.Scene {
       });
     }
 
-    // 10. Enemies: Wolves, Dinosaurs, and 4 Map Monsters
-    this.enemiesGroup = this.physics.add.group();
-    this.enemiesList = [];
+    // 9. Destination Map Fragments (4 Coastal Pieces)
+    this.mapPickupsGroup = this.physics.add.group();
+    this.mapPieceSprites.clear();
 
-    CHAPTER_6_LEVEL_DATA.enemies.forEach((enemyConfig) => {
-      if (SaveSystem.isEnemyDefeated(enemyConfig.id)) return;
+    const collectedMapPieces = new Set(PuzzleManager.getInstance().getMapPieces());
+    CHAPTER_6_LEVEL_DATA.mapPieces.forEach((piece) => {
+      if (collectedMapPieces.has(piece.id)) return;
 
-      const enemy = new Enemy(this, enemyConfig);
-      this.enemiesGroup.add(enemy);
-      this.enemiesList.push(enemy);
+      const pieceSprite = this.physics.add.sprite(piece.x, piece.y, "map-piece-icon");
+      pieceSprite.setDepth(4);
+      const b = pieceSprite.body as Phaser.Physics.Arcade.Body;
+      if (b) b.setAllowGravity(false);
 
-      if (enemyConfig.archetype !== "dinosaur") {
-        this.physics.add.collider(enemy, this.platforms);
-        this.physics.add.collider(enemy, this.movingPlatformsGroup);
-      }
-
-      this.physics.add.overlap(this.player.sprite, enemy, () => {
-        if (!enemy.getIsDefeated()) {
-          const knockbackDirX = this.player.sprite.x < enemy.x ? -1 : 1;
-          this.player.takeDamage(25, knockbackDirX, -1);
-        }
+      this.tweens.add({
+        targets: pieceSprite,
+        y: piece.y - 8,
+        duration: 650,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
       });
+
+      this.physics.add.overlap(this.player.sprite, pieceSprite, () => {
+        if (!this.mapPieceSprites.has(piece.id)) return;
+
+        SoundEffects.playPickup();
+        PuzzleManager.getInstance().collectMapPiece(piece.id);
+
+        this.tweens.add({
+          targets: pieceSprite,
+          scaleX: 1.6,
+          scaleY: 1.6,
+          alpha: 0,
+          duration: 220,
+          onComplete: () => {
+            pieceSprite.destroy();
+            this.mapPieceSprites.delete(piece.id);
+          },
+        });
+      });
+
+      this.mapPickupsGroup.add(pieceSprite);
+      this.mapPieceSprites.set(piece.id, pieceSprite);
     });
 
-    this.bowSystem.setupEnemyCollisions(this.enemiesGroup);
-
-    // 11. Destination Map Waypoints & Summit Route Gate (x = 5800)
+    // 10. Destination Map Waypoints & Summit Route Gate (x = 5800)
     const isMapDone = PuzzleManager.getInstance().isMapComplete();
     this.summitGateBarrier = this.physics.add.staticSprite(5800, 560, "broken-bridge");
     this.summitGateBarrier.setSize(20, 160);
@@ -278,34 +285,7 @@ export class Chapter6DestinationScene extends Phaser.Scene {
       });
     });
 
-    // 13. Arrow Bundles
-    this.arrowBundlePickups.clear();
-    CHAPTER_6_LEVEL_DATA.arrowBundles.forEach((bundle) => {
-      if (!collectedItems.has(bundle.id)) {
-        const abSprite = this.physics.add.sprite(bundle.x, bundle.y, "arrow-bundle");
-        abSprite.setDepth(4);
-        const b = abSprite.body as Phaser.Physics.Arcade.Body;
-        if (b) b.setAllowGravity(false);
-
-        this.physics.add.overlap(this.player.sprite, abSprite, () => {
-          if (!this.arrowBundlePickups.has(bundle.id)) return;
-          SaveSystem.collectItem(bundle.id);
-          const newAmmo = SaveSystem.addArrows(bundle.amount);
-          SoundEffects.playPickup();
-
-          EventBus.emit(GAME_EVENTS.ITEM_COLLECTED, bundle.id, `+${bundle.amount} Arrows`);
-          EventBus.emit(GAME_EVENTS.AMMO_UPDATED, newAmmo);
-          EventBus.emit(GAME_EVENTS.NOTIFICATION, `Found Quiver (+${bundle.amount} Arrows)!`);
-
-          abSprite.destroy();
-          this.arrowBundlePickups.delete(bundle.id);
-        });
-
-        this.arrowBundlePickups.set(bundle.id, abSprite);
-      }
-    });
-
-    // 14. Heart Pickups
+    // 12. Heart Pickups
     this.heartPickups.clear();
     CHAPTER_6_LEVEL_DATA.hearts.forEach((heart) => {
       if (!collectedItems.has(heart.id)) {
@@ -491,17 +471,6 @@ export class Chapter6DestinationScene extends Phaser.Scene {
     // Update player
     this.player.update(time, delta);
 
-    // Update bow & arrow system
-    this.bowSystem.update(time, delta);
-
-    // Update enemies
-    for (let i = this.enemiesList.length - 1; i >= 0; i--) {
-      const enemy = this.enemiesList[i];
-      if (enemy && enemy.active) {
-        enemy.updateEnemy(time, delta);
-      }
-    }
-
     // Parallax scroll
     const scrollX = this.cameras.main.scrollX;
     this.bgSky.tilePositionX = scrollX * 0.12;
@@ -519,7 +488,7 @@ export class Chapter6DestinationScene extends Phaser.Scene {
       const isMapComplete = PuzzleManager.getInstance().isMapComplete();
       if (!isMapComplete) {
         const count = PuzzleManager.getInstance().getMapPieces().length;
-        this.chestPromptText.setText(`[Locked: Defeat 4 Crag Monsters for Coastal Map (${count}/4)]`);
+        this.chestPromptText.setText(`[Locked: Collect all 4 Coastal Map Fragments (${count}/4)]`);
       } else {
         this.chestPromptText.setText("Press [E] to Open Coastal Summit Chest");
       }
@@ -532,7 +501,7 @@ export class Chapter6DestinationScene extends Phaser.Scene {
           SoundEffects.playHazard();
           EventBus.emit(
             GAME_EVENTS.NOTIFICATION,
-            "The summit path is sealed! You must defeat all 4 Crag Monsters to assemble the Destination Map!"
+            "The summit path is sealed! Collect all 4 Coastal Map Fragments to reveal the way!"
           );
         }
       }
@@ -584,13 +553,6 @@ export class Chapter6DestinationScene extends Phaser.Scene {
     if (this.player) {
       try {
         this.player.destroy();
-      } catch {
-        // Ignored during shutdown
-      }
-    }
-    if (this.bowSystem) {
-      try {
-        this.bowSystem.destroy();
       } catch {
         // Ignored during shutdown
       }

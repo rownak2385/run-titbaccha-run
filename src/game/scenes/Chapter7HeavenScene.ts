@@ -5,7 +5,6 @@ import { PlayerController } from "../systems/PlayerController";
 import { SaveSystem } from "../systems/SaveSystem";
 import { SoundEffects } from "../systems/SoundEffects";
 import { MovingPlatform } from "../objects/MovingPlatform";
-import { BowSystem } from "../systems/BowSystem";
 import { PuzzleManager } from "../systems/PuzzleManager";
 import { CHAPTER_7_LEVEL_DATA } from "../data/Chapter7LevelData";
 
@@ -14,9 +13,6 @@ export class Chapter7HeavenScene extends Phaser.Scene {
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];
-
-  // Bow System (Disabled in Chapter 7 - NO COMBAT)
-  public bowSystem!: BowSystem;
 
   // Parallax Backgrounds (Golden Sunset & Glistening Ocean)
   private bgSky!: Phaser.GameObjects.TileSprite;
@@ -112,11 +108,7 @@ export class Chapter7HeavenScene extends Phaser.Scene {
       this.player.setHealth(currentSave.health);
     }
 
-    // 7. Bow System: Strictly DISABLED IN CHAPTER 7 (NO COMBAT)
-    this.bowSystem = new BowSystem(this, this.player.sprite);
-    this.bowSystem.setCombatAllowed(false); // Shooting disabled, crosshair hidden
-
-    // 8. SYNCHRONIZED MATCHING NECKLACE ACTIVATION (Exclusive to Chapter 7!)
+    // 7. SYNCHRONIZED MATCHING NECKLACE ACTIVATION (Exclusive to Chapter 7!)
     SaveSystem.setNecklaceActivated(true);
     SoundEffects.playNecklaceGlow();
     EventBus.emit(GAME_EVENTS.NECKLACE_GLOW_TOGGLED, true);
@@ -531,13 +523,6 @@ export class Chapter7HeavenScene extends Phaser.Scene {
     if (this.player) {
       try {
         this.player.destroy();
-      } catch {
-        // Ignored during shutdown
-      }
-    }
-    if (this.bowSystem) {
-      try {
-        this.bowSystem.destroy();
       } catch {
         // Ignored during shutdown
       }

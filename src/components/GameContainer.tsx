@@ -8,9 +8,11 @@ import { PauseModal } from "./PauseModal";
 import { ControlsModal } from "./ControlsModal";
 import { CutsceneModal } from "./CutsceneModal";
 import { CinematicPlayer } from "./CinematicPlayer";
+import { IllustratedStoryPanel } from "./IllustratedStoryPanel";
 import { LetterAssemblyModal } from "./LetterAssemblyModal";
 import { SunsetEndingModal } from "./SunsetEndingModal";
 import { CINEMATIC_TRACKS } from "@/game/data/CinematicTracks";
+import { STORY_DATA, StoryPanelData } from "@/game/data/StoryData";
 import { SaveSystem } from "@/game/systems/SaveSystem";
 import { SoundEffects } from "@/game/systems/SoundEffects";
 import { ChapterManager } from "@/game/systems/ChapterManager";
@@ -37,6 +39,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({
   const [isControlsOpen, setIsControlsOpen] = useState(false);
   const [isCutsceneOpen, setIsCutsceneOpen] = useState(false);
   const [activeCinematic, setActiveCinematic] = useState<CinematicData | null>(null);
+  const [activeStory, setActiveStory] = useState<StoryPanelData | null>(null);
   const [isLetterModalOpen, setIsLetterModalOpen] = useState(false);
   const [isSunsetEndingOpen, setIsSunsetEndingOpen] = useState(false);
 
@@ -275,9 +278,25 @@ export const GameContainer: React.FC<GameContainerProps> = ({
       }),
 
       EventBus.on(GAME_EVENTS.CUTSCENE_TRIGGER, (sceneId?: string) => {
-        const trackKey = sceneId || "chapter1_betrayal";
-        const track = CINEMATIC_TRACKS[trackKey] || CINEMATIC_TRACKS.chapter1_betrayal;
-        setActiveCinematic(track);
+        // Resolve Illustrated Story Panel
+        const panels = STORY_DATA.STORY_PANELS;
+        let story: StoryPanelData = panels.ch1_betrayal;
+        if (sceneId === "chapter1_betrayal" || sceneId === "ch1_betrayal") story = panels.ch1_betrayal;
+        else if (sceneId === "chapter2_search" || sceneId === "ch2_search") story = panels.ch2_search;
+        else if (sceneId === "chapter3_rescue" || sceneId === "ch3_memory_photo") story = panels.ch3_memory_photo;
+        else if (sceneId === "chapter4_darkness" || sceneId === "ch4_dark_cave") story = panels.ch4_dark_cave;
+        else if (sceneId === "chapter5_station" || sceneId === "ch5_moving_train") story = panels.ch5_moving_train;
+        else if (sceneId === "chapter6_destination" || sceneId === "ch6_seaside_explosion") story = panels.ch6_seaside_explosion;
+        else if (sceneId === "chapter7_necklace" || sceneId === "ch7_necklace_glow") story = panels.ch7_necklace_glow;
+        else if (sceneId === "chapter7_reunion" || sceneId === "ch7_reunion_hug") story = panels.ch7_reunion_hug;
+        else if (sceneId === "prologue_friendship") story = panels.prologue_friendship;
+        else if (sceneId === "meteor_disaster") story = panels.meteor_disaster;
+        else if (sceneId === "sunset_ending") story = panels.sunset_ending;
+        else if (sceneId && (panels as Record<string, StoryPanelData>)[sceneId]) {
+          story = (panels as Record<string, StoryPanelData>)[sceneId];
+        }
+
+        setActiveStory(story);
       }),
 
       EventBus.on(GAME_EVENTS.CHANGE_CHAPTER, (targetChapter: number) => {
@@ -326,12 +345,13 @@ export const GameContainer: React.FC<GameContainerProps> = ({
       isControlsOpen ||
       isCutsceneOpen ||
       activeCinematic !== null ||
+      activeStory !== null ||
       isLetterModalOpen ||
       isSunsetEndingOpen;
     if (gameRef.current?.input?.keyboard) {
       gameRef.current.input.keyboard.enabled = !isAnyModalOpen;
     }
-  }, [isPaused, isControlsOpen, isCutsceneOpen, activeCinematic, isLetterModalOpen, isSunsetEndingOpen]);
+  }, [isPaused, isControlsOpen, isCutsceneOpen, activeCinematic, activeStory, isLetterModalOpen, isSunsetEndingOpen]);
 
   // Actions
   const handleResume = useCallback(() => {
@@ -347,6 +367,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({
   const handleReplaySlice = useCallback(() => {
     setIsCutsceneOpen(false);
     setActiveCinematic(null);
+    setActiveStory(null);
     EventBus.emit(GAME_EVENTS.RELOAD_SAVE);
   }, []);
 
@@ -367,9 +388,15 @@ export const GameContainer: React.FC<GameContainerProps> = ({
     setIsCutsceneOpen(true);
   }, []);
 
+  const handleStoryComplete = useCallback(() => {
+    setActiveStory(null);
+    setIsCutsceneOpen(true);
+  }, []);
+
   const handleContinueNextChapter = useCallback(() => {
     setIsCutsceneOpen(false);
     setActiveCinematic(null);
+    setActiveStory(null);
 
     const save = SaveSystem.load();
     const currentCh = save?.chapter || 1;
@@ -462,7 +489,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({
 
         {/* Modals */}
         <PauseModal
-          isOpen={isPaused && !isControlsOpen && activeCinematic === null}
+          isOpen={isPaused && !isControlsOpen && activeCinematic === null && activeStory === null}
           onResume={handleResume}
           onRestartCheckpoint={handleRestartCheckpoint}
           onExitToMenu={onExitToMenu}
@@ -473,8 +500,16 @@ export const GameContainer: React.FC<GameContainerProps> = ({
           onClose={handleCloseControls}
         />
 
-        {/* Reusable Cinematic Player Overlay */}
-        {activeCinematic && (
+        {/* Reusable Illustrated Storytelling Panel Overlay */}
+        {activeStory && (
+          <IllustratedStoryPanel
+            story={activeStory}
+            onComplete={handleStoryComplete}
+          />
+        )}
+
+        {/* Legacy Cinematic Player Overlay (Fallback if needed) */}
+        {activeCinematic && !activeStory && (
           <CinematicPlayer
             cinematic={activeCinematic}
             isMuted={isMuted}
@@ -484,7 +519,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({
 
         {/* Chapter Completion & Narrative Summary Modal */}
         <CutsceneModal
-          isOpen={isCutsceneOpen && activeCinematic === null}
+          isOpen={isCutsceneOpen && activeCinematic === null && activeStory === null}
           chapter={hudState.chapter}
           onContinueNextChapter={handleContinueNextChapter}
           onRestartSlice={handleReplaySlice}

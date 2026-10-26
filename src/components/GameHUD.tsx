@@ -63,15 +63,8 @@ export const GameHUD: React.FC<GameHUDProps> = ({
             </div>
           </div>
 
-          {/* Weapon / Ammo / Torch status */}
+          {/* Buffs & Torch status */}
           <div className="flex flex-wrap items-center gap-2 pt-1 text-[10px]">
-            {/* Bow Ammo */}
-            {hudState.hasBow && (
-              <span className="flex items-center gap-1 rounded-full bg-sky-950/80 border border-sky-500/60 px-2 py-0.5 font-mono font-bold text-sky-300">
-                🏹 ARROWS: {hudState.arrowCount}/{hudState.maxArrows}
-              </span>
-            )}
-
             {/* Torch indicator in Chapter 4 */}
             {hudState.torchAvailable && (
               <span

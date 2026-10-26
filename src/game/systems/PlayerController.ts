@@ -7,6 +7,16 @@ import { SoundEffects } from "./SoundEffects";
 import { CharacterAssetManager } from "./CharacterAssetManager";
 
 export class PlayerController {
+  // Canonical constant: distance in pixels from Titi's sprite center (anchor 0.5, 0.5) to the bottom of the feet and physics body
+  public static readonly FOOT_OFFSET_Y: number = 57;
+
+  /**
+   * Calculates the exact sprite center Y required for Titi's feet to rest precisely on a walkable surface at surfaceY.
+   */
+  public static getGroundedCenterY(surfaceY: number): number {
+    return surfaceY - PlayerController.FOOT_OFFSET_Y;
+  }
+
   public sprite: Phaser.Physics.Arcade.Sprite;
   private scene: Phaser.Scene;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -242,7 +252,7 @@ export class PlayerController {
     this.speedBoostTimer = 0;
 
     const body = this.sprite.body as Phaser.Physics.Arcade.Body;
-    body.setVelocity(0, 0);
+    body.reset(this.activeCheckpoint.x, this.activeCheckpoint.y);
     this.sprite.setPosition(this.activeCheckpoint.x, this.activeCheckpoint.y);
     this.sprite.setAlpha(1.0);
     this.sprite.setVisible(true);

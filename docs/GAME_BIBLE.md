@@ -1,7 +1,7 @@
 # GAME BIBLE: Run Titibaccha, Run!
 
-> **Version**: 2.0.0-production  
-> **Status**: Active Development – Chapter 1: The Betrayal (Full Playable Level)  
+> **Version**: 3.0.0-combat-free  
+> **Status**: Full 7-Chapter Adventure – Combat-Free Platforming, Progression Repair & Illustrated Storytelling  
 > **Target Platform**: Desktop Browser (16:9 responsive logical container: 1280x720)  
 > **Core Technology**: Next.js 14 (App Router), TypeScript, Phaser 3.88 (Arcade Physics), Tailwind CSS
 
@@ -9,44 +9,45 @@
 
 ## 1. Executive Summary & Vision
 
-**Run Titibaccha, Run!** is an original narrative 2D platforming adventure. Players step into the tiny orange feet of **Titibaccha**—a spirited, vulnerable, yet fiercely determined baby chick—navigating a disaster-struck world, unraveling mysteries, and seeking reunion with Ronny.
+**Run Titibaccha, Run!** is an original narrative 2D running and platforming adventure. Players step into the tiny orange feet of **Titibaccha**—a spirited, vulnerable, yet fiercely determined baby chick—navigating a disaster-struck world, unraveling mysteries, and seeking reunion with Ronny.
 
-The game blends responsive 2D platforming feel with emotional environmental storytelling, collectible letter fragments, and atmospheric audiovisual pacing.
+### Canonical Game Design Mandate (Combat-Free)
+- **Zero Combat**: No bow weapons, no arrow projectiles, no mouse-aimed shooting, and no enemy combat encounters.
+- **Pure Platforming & Exploration**: Traversal is driven purely by running, precision jumping, moving platforms, environmental hazards (briars, crumbling masonry, mud chasms, steam pipes), puzzle piece gathering, and vitality management.
+- **Illustrated Storytelling**: Narrative progression is conveyed via interactive, readable `IllustratedStoryPanel` modals that pause gameplay and advance story beats without requiring external video streams.
+- **Narrative Invariants**: Chapter 1 fox deception; Chapters 3–6 puzzle assembly (Photo, Ticket, Map); Chapter 7 peaceful rose gathering, radiant leaf pendants, emotional reunion embrace occurring **before** secret letter assembly, and clifftop sunset ending.
 
 ---
 
-## 2. World & Narrative Arc (Seven Chapters Canonical Specification)
+## 2. World & Narrative Arc (Seven Canonical Chapters)
 
-The overarching story is structured into seven distinct chapters:
+1. **Chapter 1: The Betrayal (Ruined Garden & Campsite)**  
+   *Setting*: Scorched garden terraces and flowerbeds ravaged by celestial disaster.  
+   *Objective*: Run through ruined garden terraces, leap over briar pits, reach Ronny's campsite, witness the fox's deceptive bait encounter, and collect the Chapter 2 Key and Letter Fragment 1.
 
-1. **Chapter 1: The Betrayal (Current Level)**  
-   *Setting*: A destroyed, melancholic domestic garden ravaged by an earlier celestial meteor disaster. Scorched earth and shattered flowerbeds contrast with resilient green blooms.  
-   *Level Objective*: Traverse 7 dangerous ruined garden segments, master moving platforms and hazardous ruins, reach Ronny who is waiting with food and supplies, witness the tragic fox deception, and recover the Chapter 2 Key and Letter Fragment 1.  
-   *Narrative Climax*: Ronny waits with food and provisions. A cunning fox deliberately lures innocent, hungry Titibaccha with golden bait. Ronny witnesses this, misinterprets the interaction as abandonment, becomes heartbroken, and departs alone. Titibaccha is left alone in the clearing.
+2. **Chapter 2: The Search (Wilderness Trails)**  
+   *Setting*: Desolate trails and crumbling colonnades beyond the garden gate.  
+   *Objective*: Follow the golden heart trail dropped from Ronny's bag, navigate broken chasms and moving platforms, and recover the Chapter 3 Key and Letter Fragment 2.
 
-2. **Chapter 2: The Search** *(Future Milestone)*  
-   *Setting*: Beyond the garden perimeter, following Ronny's distant trail through unfamiliar terrain.  
-   *Focus*: Tracking clues, vertical leaps, and the emotional burden of separation.
+3. **Chapter 3: The Rescue (Whispering Forest)**  
+   *Setting*: Deep ancient forest canopy and suspended wooden log bridges.  
+   *Objective*: Explore branches and hidden routes to collect all **9 Photo Memory Fragments** of Ronny and Titi. Assembling the photo unlocks the entrance to the ancient cave vault and awards Letter Fragment 3.
 
-3. **Chapter 3: The Murky Stream & Reedbeds** *(Future Milestone)*  
-   *Setting*: Water-logged channels and flooded irrigation ditches.  
-   *Focus*: Buoyancy, floating debris timing, leaping hazards.
+4. **Chapter 4: The Darkness (Subterranean Cavern & Sunlit Glades)**  
+   *Setting*: Dark crystal cavern with limited torch radius and sunlight zones.  
+   *Objective*: Balance torch vitality, discover hidden supplies, collect all **3 Train Ticket Fragments**, assemble the Highland Express Ticket, and obtain Letter Fragment 4.
 
-4. **Chapter 4: The Briar Maze** *(Future Milestone)*  
-   *Setting*: Dense thorny undergrowth and bramble tunnels.  
-   *Focus*: Complex maze navigation and puzzle routing.
+5. **Chapter 5: The Station (Highland Express Rooftops)**  
+   *Setting*: High-speed train rushing through misty mountain passes.  
+   *Objective*: Board the train with the valid ticket, leap across moving carriage roofs, dodge steam vents, avoid falling off tracks, and secure the engine safe for Letter Fragment 5.
 
-5. **Chapter 5: The Autumn Forest & Fox's Trail** *(Future Milestone)*  
-   *Setting*: Deciduous woodlands where the fox's motives begin to unravel.  
-   *Focus*: Stealth, misdirection, and environmental challenges.
+6. **Chapter 6: The Destination (Coastal Bluffs & Locomotive Wreck)**  
+   *Setting*: Ocean cliffs, terminus dock, and mountain climb.  
+   *Objective*: Discover Ronny's lost traveling pack, survive the engine boiler explosion, collect all **4 Destination Map Fragments**, assemble the coastal map, and ascend to the sanctuary summit for Letter Fragment 6.
 
-6. **Chapter 6: The Stormy Mills** *(Future Milestone)*  
-   *Setting*: Abandoned wind-swept agricultural mills and rotating mechanisms.  
-   *Focus*: Wind physics, rotating wheel traversal, rain visibility.
-
-7. **Chapter 7: Reunion & The Complete Letter** *(Future Milestone)*  
-   *Setting*: The final summit and homestead.  
-   *Focus*: Resolution, emotional reunion, and piecing together Ronny's complete 7-fragment letter.
+7. **Chapter 7: The Heaven (Clifftop Sanctuary & Sunset Reunion)**  
+   *Setting*: Serene clifftop meadow bathed in sunset glow above the sea.  
+   *Objective*: Peaceful exploration. Gather **5 wild clifftop roses** to create the Five-Rose Bouquet. Reach Ronny, witness the synchronized emerald glow of matching leaf pendants, share the long-awaited warm reunion hug, assemble the complete 7-piece letter, and sit together watching the sunset.
 
 > **CRITICAL PRODUCTION RULE**: Do NOT fabricate full letter contents, speculative Ronny conversations, fox motive reveals, or chapter counts beyond the technical roadmap. All cutscene sequences must remain clearly marked architectural hooks until final Google Flow media assets are integrated.
 

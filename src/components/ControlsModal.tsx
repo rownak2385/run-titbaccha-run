@@ -23,7 +23,7 @@ export const ControlsModal: React.FC<ControlsModalProps> = ({ isOpen, onClose })
         <div className="flex items-center justify-between border-b border-stone-700/60 pb-3">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🐤</span>
-            <h2 className="text-xl font-bold tracking-wide text-amber-400">Controls & Chapter 1 Guide</h2>
+            <h2 className="text-xl font-bold tracking-wide text-amber-400">Controls & Adventure Guide</h2>
           </div>
           <button
             onClick={onClose}
@@ -47,11 +47,7 @@ export const ControlsModal: React.FC<ControlsModalProps> = ({ isOpen, onClose })
               </div>
               <div className="rounded-lg bg-stone-800/80 p-2.5 border border-stone-700">
                 <span className="font-mono font-bold text-amber-400">[E]</span>
-                <p className="text-stone-300 mt-1">Interact with Chests</p>
-              </div>
-              <div className="rounded-lg bg-stone-800/80 p-2.5 border border-stone-700">
-                <span className="font-mono font-bold text-amber-400">Mouse Left-Click</span>
-                <p className="text-stone-300 mt-1">Aim & Shoot Bow (Ch 3-4)</p>
+                <p className="text-stone-300 mt-1">Interact with Chests / Objects</p>
               </div>
               <div className="rounded-lg bg-stone-800/80 p-2.5 border border-stone-700">
                 <span className="font-mono font-bold text-amber-400">[F] / [T]</span>
@@ -59,21 +55,25 @@ export const ControlsModal: React.FC<ControlsModalProps> = ({ isOpen, onClose })
               </div>
               <div className="rounded-lg bg-stone-800/80 p-2.5 border border-stone-700">
                 <span className="font-mono font-bold text-amber-400">Esc / P</span>
-                <p className="text-stone-300 mt-1">Pause / Resume / Skip</p>
+                <p className="text-stone-300 mt-1">Pause / Resume Game</p>
+              </div>
+              <div className="rounded-lg bg-stone-800/80 p-2.5 border border-stone-700">
+                <span className="font-mono font-bold text-amber-400">Enter / Space</span>
+                <p className="text-stone-300 mt-1">Advance Illustrated Story</p>
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border border-amber-500/20 bg-amber-950/20 p-3">
-            <h3 className="font-semibold text-amber-300">🌱 Chapters 1 to 4 Mechanics</h3>
+            <h3 className="font-semibold text-amber-300">🌱 Adventure Mechanics</h3>
             <ul className="mt-2 space-y-1.5 text-xs text-stone-300">
               <li className="flex items-start gap-2">
                 <span className="text-red-400">❤️</span>
                 <span><strong>Heart Pickups:</strong> Restores +30 Vitality and grants 5-second 1.5x speed boost.</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-sky-400">🏹</span>
-                <span><strong>Bow Combat (Ch 3-4):</strong> Defeat wolves, foxes and cave beasts to collect puzzle pieces.</span>
+                <span className="text-sky-400">🧩</span>
+                <span><strong>Story Collectibles:</strong> Find photo pieces, ticket fragments, and coastal map pieces to unlock progress.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-400">🔦</span>
@@ -85,7 +85,7 @@ export const ControlsModal: React.FC<ControlsModalProps> = ({ isOpen, onClose })
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-emerald-400">📦</span>
-                <span><strong>Chests & Secret Letters:</strong> Collect 4 secret letter fragments, unlock keys, memory photo, and the train ticket to Chapter 5!</span>
+                <span><strong>Chests & Secret Letters:</strong> Collect 7 secret letter fragments across the journey to reunite with Ronny!</span>
               </li>
             </ul>
           </div>

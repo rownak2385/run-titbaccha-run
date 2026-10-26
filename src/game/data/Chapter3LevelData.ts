@@ -25,11 +25,11 @@ export interface CollectibleHeartConfig {
   y: number;
 }
 
-export interface ArrowBundleConfig {
+export interface PhotoPieceConfig {
   id: string;
   x: number;
   y: number;
-  amount: number;
+  label: string;
 }
 
 export const CHAPTER_3_LEVEL_DATA = {
@@ -123,140 +123,18 @@ export const CHAPTER_3_LEVEL_DATA = {
     { x: 6350, y: 642 },
   ] as HazardConfig[],
 
-  // Bow Pedestal Location
-  bowLocation: {
-    x: 850,
-    y: 440,
-  },
-
-  // Guaranteed Arrow Replenishment Quivers (before & between encounters)
-  arrowBundles: [
-    { id: "bundle_ch3_01", x: 920, y: 440, amount: 5 },
-    { id: "bundle_ch3_02", x: 1650, y: 620, amount: 5 },
-    { id: "bundle_ch3_03", x: 2800, y: 620, amount: 5 },
-    { id: "bundle_ch3_04", x: 3600, y: 620, amount: 5 },
-    { id: "bundle_ch3_05", x: 4400, y: 420, amount: 5 },
-    { id: "bundle_ch3_06", x: 5050, y: 620, amount: 5 },
-    { id: "bundle_ch3_07", x: 5850, y: 620, amount: 5 },
-    { id: "bundle_ch3_08", x: 6200, y: 620, amount: 5 },
-  ] as ArrowBundleConfig[],
-
-  // Exactly 9 Mandatory Hostile Encounters (Dropping photo pieces 01 to 09)
-  enemies: [
-    {
-      id: "ch3_enemy_01",
-      x: 1200,
-      y: 620,
-      archetype: "wolf",
-      patrolMinX: 1050,
-      patrolMaxX: 1350,
-      maxHp: 50,
-      speed: 70,
-      dropItemId: "photo_piece_01",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_02",
-      x: 1750,
-      y: 620,
-      archetype: "fox",
-      patrolMinX: 1650,
-      patrolMaxX: 1950,
-      maxHp: 50,
-      speed: 85,
-      dropItemId: "photo_piece_02",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_03",
-      x: 2300,
-      y: 620,
-      archetype: "wolf",
-      patrolMinX: 2150,
-      patrolMaxX: 2450,
-      maxHp: 50,
-      speed: 75,
-      dropItemId: "photo_piece_03",
-      dropItemType: "photo",
-    },
-    // Checkpoint 1 placed at 2150
-
-    {
-      id: "ch3_enemy_04",
-      x: 2950,
-      y: 620,
-      archetype: "fox",
-      patrolMinX: 2800,
-      patrolMaxX: 3150,
-      maxHp: 50,
-      speed: 90,
-      dropItemId: "photo_piece_04",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_05",
-      x: 3450,
-      y: 620,
-      archetype: "wolf",
-      patrolMinX: 3300,
-      patrolMaxX: 3650,
-      maxHp: 50,
-      speed: 70,
-      dropItemId: "photo_piece_05",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_06",
-      x: 4100,
-      y: 620,
-      archetype: "fox",
-      patrolMinX: 3980,
-      patrolMaxX: 4300,
-      maxHp: 50,
-      speed: 85,
-      dropItemId: "photo_piece_06",
-      dropItemType: "photo",
-    },
-    // Checkpoint 2 placed at 4350
-
-    {
-      id: "ch3_enemy_07",
-      x: 5150,
-      y: 620,
-      archetype: "wolf",
-      patrolMinX: 5000,
-      patrolMaxX: 5350,
-      maxHp: 50,
-      speed: 75,
-      dropItemId: "photo_piece_07",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_08",
-      x: 5650,
-      y: 620,
-      archetype: "fox",
-      patrolMinX: 5450,
-      patrolMaxX: 5850,
-      maxHp: 50,
-      speed: 90,
-      dropItemId: "photo_piece_08",
-      dropItemType: "photo",
-    },
-    {
-      id: "ch3_enemy_09",
-      x: 6550,
-      y: 620,
-      archetype: "wolf", // Cave Entrance Alpha Wolf
-      patrolMinX: 6350,
-      patrolMaxX: 6720,
-      maxHp: 100, // 2 arrow hits
-      speed: 80,
-      dropItemId: "photo_piece_09",
-      dropItemType: "photo",
-    },
-    // Checkpoint 3 placed at 6250
-  ] as EnemyConfig[],
+  // Exactly 9 Unique Reachable Photo Memory Fragments (Combat-Free Exploration)
+  photoPieces: [
+    { id: "photo_piece_01", x: 850, y: 430, label: "Photo Scrap 1 of 9" },
+    { id: "photo_piece_02", x: 1490, y: 470, label: "Photo Scrap 2 of 9" },
+    { id: "photo_piece_03", x: 2350, y: 460, label: "Photo Scrap 3 of 9" },
+    { id: "photo_piece_04", x: 2950, y: 410, label: "Photo Scrap 4 of 9" },
+    { id: "photo_piece_05", x: 3550, y: 430, label: "Photo Scrap 5 of 9" },
+    { id: "photo_piece_06", x: 4150, y: 410, label: "Photo Scrap 6 of 9" },
+    { id: "photo_piece_07", x: 4820, y: 470, label: "Photo Scrap 7 of 9" },
+    { id: "photo_piece_08", x: 5550, y: 340, label: "Photo Scrap 8 of 9" },
+    { id: "photo_piece_09", x: 6450, y: 470, label: "Photo Scrap 9 of 9" },
+  ] as PhotoPieceConfig[],
 
   // Ronny's Dropped Heart Trail
   hearts: [

@@ -113,7 +113,7 @@ export const GAME_CONSTANTS = {
 
   // Checkpoints across Chapters
   CHECKPOINTS: {
-    // Chapter 1
+    // Chapter 1 (Walkable surface Y = 656, Resting center Y = 599)
     DEFAULT_SPAWN: {
       x: 120,
       y: 580,
@@ -122,169 +122,169 @@ export const GAME_CONSTANTS = {
     },
     CHECKPOINT_1: {
       x: 1950,
-      y: 570,
+      y: 580,
       id: "ch1_checkpoint_sundial",
       label: "Overgrown Sun-Dial Plaza",
     },
     CHECKPOINT_2: {
       x: 4250,
-      y: 570,
+      y: 580,
       id: "ch1_checkpoint_lantern",
       label: "Weathered Stone Lantern",
     },
 
-    // Chapter 2
+    // Chapter 2 (Walkable surface Y = 624, Resting center Y = 567)
     CH2_SPAWN: {
       x: 140,
-      y: 580,
+      y: 550,
       id: "ch2_spawn",
       label: "Ruined Garden Perimeter",
     },
     CH2_CP1: {
       x: 1950,
-      y: 570,
+      y: 550,
       id: "ch2_checkpoint_trellis",
       label: "Collapsed Trellis Waypoint",
     },
     CH2_CP2: {
       x: 3900,
-      y: 570,
+      y: 550,
       id: "ch2_checkpoint_statue",
       label: "Fallen Angel Fountain",
     },
     CH2_CP3: {
       x: 5500,
-      y: 570,
+      y: 550,
       id: "ch2_checkpoint_overlook",
       label: "Wilderness Overlook Trail",
     },
 
-    // Chapter 3
+    // Chapter 3 (Walkable surface Y = 624, Resting center Y = 567)
     CH3_SPAWN: {
       x: 140,
-      y: 580,
+      y: 550,
       id: "ch3_spawn",
       label: "Forest Verge Entryway",
     },
     CH3_CP1: {
       x: 2150,
-      y: 570,
+      y: 550,
       id: "ch3_checkpoint_ancient_oak",
       label: "Ancient Hollow Oak",
     },
     CH3_CP2: {
       x: 4350,
-      y: 570,
+      y: 550,
       id: "ch3_checkpoint_ravine",
       label: "Misty Timber Ravine",
     },
     CH3_CP3: {
       x: 6250,
-      y: 570,
+      y: 550,
       id: "ch3_checkpoint_cavern_mouth",
       label: "Dark Cavern Threshold",
     },
 
-    // Chapter 4
+    // Chapter 4 (Walkable surface Y = 624, Resting center Y = 567)
     CH4_SPAWN: {
       x: 140,
-      y: 580,
+      y: 550,
       id: "ch4_spawn",
       label: "Underground Cavern Shaft",
     },
     CH4_CP1: {
       x: 1950,
-      y: 570,
+      y: 550,
       id: "ch4_checkpoint_sunlight_1",
       label: "First Sunlit Chasm",
     },
     CH4_CP2: {
       x: 3950,
-      y: 570,
+      y: 550,
       id: "ch4_checkpoint_sunlight_2",
       label: "Crystalline Grotto Basin",
     },
     CH4_CP3: {
       x: 5650,
-      y: 570,
+      y: 550,
       id: "ch4_checkpoint_sunlight_3",
       label: "Deep Daylight Fracture",
     },
 
-    // Chapter 5: The Station
+    // Chapter 5: The Station (Platform surface Y = 608, Train roof surface Y = 504)
     CH5_SPAWN: {
       x: 140,
-      y: 580,
+      y: 530,
       id: "ch5_spawn",
       label: "Highland Station Platform",
     },
     CH5_CP1: {
       x: 1200,
-      y: 580,
+      y: 530,
       id: "ch5_checkpoint_gate",
       label: "Ticket Inspection Platform",
     },
     CH5_CP2: {
       x: 3400,
-      y: 490,
+      y: 430,
       id: "ch5_checkpoint_car_mid",
       label: "Mid-Train Passenger Roof",
     },
     CH5_CP3: {
       x: 5400,
-      y: 490,
+      y: 430,
       id: "ch5_checkpoint_tender",
       label: "Locomotive Tender Overlook",
     },
 
-    // Chapter 6: The Destination
+    // Chapter 6: The Destination (Walkable surface Y = 608, Resting center Y = 551)
     CH6_SPAWN: {
       x: 140,
-      y: 580,
+      y: 530,
       id: "ch6_spawn",
       label: "Coastal Terminus Dock",
     },
     CH6_CP1: {
       x: 950,
-      y: 580,
+      y: 530,
       id: "ch6_checkpoint_blast",
       label: "Exploded Engine Wreckage",
     },
     CH6_CP2: {
       x: 3200,
-      y: 570,
+      y: 530,
       id: "ch6_checkpoint_bridge",
       label: "Broken Coastal Aqueduct",
     },
     CH6_CP3: {
       x: 5200,
-      y: 570,
+      y: 530,
       id: "ch6_checkpoint_cliffs",
       label: "High Crag Overlook",
     },
 
-    // Chapter 7: The Heaven
+    // Chapter 7: The Heaven (Walkable surface Y = 608, Resting center Y = 551)
     CH7_SPAWN: {
       x: 140,
-      y: 580,
+      y: 530,
       id: "ch7_spawn",
       label: "Sunset Ocean Path",
     },
     CH7_CP1: {
       x: 1500,
-      y: 570,
+      y: 530,
       id: "ch7_checkpoint_sunset_ridge",
       label: "Sunset Meadow Ridge",
     },
     CH7_CP2: {
       x: 3600,
-      y: 570,
+      y: 530,
       id: "ch7_checkpoint_pine_terrace",
       label: "Whispering Pine Terrace",
     },
     CH7_CP3: {
       x: 5700,
-      y: 570,
+      y: 530,
       id: "ch7_checkpoint_summit_plateau",
       label: "Clifftop Sanctuary Plateau",
     },
@@ -372,11 +372,12 @@ export const GAME_CONSTANTS = {
 
   // Save system
   SAVE: {
-    STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V4",
+    STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V5",
+    V4_STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V4",
     V3_STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V3",
     V2_STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V2",
     LEGACY_STORAGE_KEY: "RUN_TITIBACCHA_SAVE_V1",
-    SCHEMA_VERSION: 4,
+    SCHEMA_VERSION: 5,
   },
 
   // Narrative Positions Chapter 1

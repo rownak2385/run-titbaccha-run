@@ -62,33 +62,50 @@ export class SaveSystem {
   }
 
   /**
-   * Loads save data with explicit version migration from V1 / V2 / V3 to V4.
+   * Loads save data with explicit version migration from V1 / V2 / V3 / V4 to V5.
    */
   public static load(): SaveData | null {
     if (!this.isBrowser) return null;
 
     try {
-      // 1. Try reading V4 save
-      const serializedV4 = localStorage.getItem(GAME_CONSTANTS.SAVE.STORAGE_KEY);
-      if (serializedV4) {
+      // 1. Try reading V5 save
+      const serializedV5 = localStorage.getItem(GAME_CONSTANTS.SAVE.STORAGE_KEY);
+      if (serializedV5) {
         try {
-          const parsed = JSON.parse(serializedV4) as Partial<SaveData>;
+          const parsed = JSON.parse(serializedV5) as Partial<SaveData>;
           if (parsed && parsed.version === GAME_CONSTANTS.SAVE.SCHEMA_VERSION) {
             return this.sanitizeSaveData(parsed);
           }
         } catch (jsonErr) {
-          console.warn("Corrupted V4 save payload encountered. Recovering to clean default save:", jsonErr);
+          console.warn("Corrupted V5 save payload encountered. Recovering to clean default save:", jsonErr);
           const recovered = this.getDefaultSave();
           this.save(recovered);
           return recovered;
         }
       }
 
-      // 2. Try migrating V3 save
+      // 2. Try migrating V4 save
+      const serializedV4 = localStorage.getItem(GAME_CONSTANTS.SAVE.V4_STORAGE_KEY);
+      if (serializedV4) {
+        try {
+          console.info("Found V4 save data. Performing seamless migration to V5...");
+          const v4Parsed = JSON.parse(serializedV4) as Partial<SaveData>;
+          const migratedSave = this.sanitizeSaveData({
+            ...v4Parsed,
+            version: GAME_CONSTANTS.SAVE.SCHEMA_VERSION,
+          });
+          this.save(migratedSave);
+          return migratedSave;
+        } catch (v4Err) {
+          console.warn("Corrupted V4 save encountered during migration:", v4Err);
+        }
+      }
+
+      // 3. Try migrating V3 save
       const serializedV3 = localStorage.getItem(GAME_CONSTANTS.SAVE.V3_STORAGE_KEY);
       if (serializedV3) {
         try {
-          console.info("Found V3 save data. Performing seamless migration to V4...");
+          console.info("Found V3 save data. Performing seamless migration to V5...");
           const v3Parsed = JSON.parse(serializedV3) as Partial<SaveData>;
           const migratedSave = this.sanitizeSaveData({
             ...v3Parsed,
@@ -101,11 +118,11 @@ export class SaveSystem {
         }
       }
 
-      // 3. Try migrating V2 save
+      // 4. Try migrating V2 save
       const serializedV2 = localStorage.getItem(GAME_CONSTANTS.SAVE.V2_STORAGE_KEY);
       if (serializedV2) {
         try {
-          console.info("Found V2 save data. Performing seamless migration to V4...");
+          console.info("Found V2 save data. Performing seamless migration to V5...");
           const v2Parsed = JSON.parse(serializedV2) as Record<string, unknown>;
           const migratedSave = this.migrateFromV2(v2Parsed);
           this.save(migratedSave);
@@ -115,11 +132,11 @@ export class SaveSystem {
         }
       }
 
-      // 4. Try migrating Legacy V1 save
+      // 5. Try migrating Legacy V1 save
       const serializedV1 = localStorage.getItem(GAME_CONSTANTS.SAVE.LEGACY_STORAGE_KEY);
       if (serializedV1) {
         try {
-          console.info("Found legacy V1 save data. Performing seamless migration to V4...");
+          console.info("Found legacy V1 save data. Performing seamless migration to V5...");
           const v1Parsed = JSON.parse(serializedV1) as Record<string, unknown>;
           const migratedSave = this.migrateFromV1(v1Parsed);
           this.save(migratedSave);
@@ -235,12 +252,23 @@ export class SaveSystem {
     const mapPieces = parsed.puzzles?.mapPieces || [];
     const roses = Array.isArray(parsed.roses) ? parsed.roses : [];
 
+    let activeCheckpoint = parsed.activeCheckpoint ?? defaults.activeCheckpoint;
+    if (activeCheckpoint) {
+      const ch = typeof parsed.chapter === "number" ? parsed.chapter : defaults.chapter;
+      // Auto-recalibrate older checkpoint coordinates if y was sunken (prior to Master Prompt 12)
+      if ((ch === 2 || ch === 3 || ch === 4) && activeCheckpoint.y > 550) {
+        activeCheckpoint = { ...activeCheckpoint, y: 550 };
+      } else if ((ch === 5 || ch === 6 || ch === 7) && activeCheckpoint.y > 530 && activeCheckpoint.y < 600) {
+        activeCheckpoint = { ...activeCheckpoint, y: 530 };
+      }
+    }
+
     return {
       version: GAME_CONSTANTS.SAVE.SCHEMA_VERSION,
       chapter: typeof parsed.chapter === "number" ? parsed.chapter : defaults.chapter,
       unlockedChapters: unlocked,
       completedChapters: completed,
-      activeCheckpoint: parsed.activeCheckpoint ?? defaults.activeCheckpoint,
+      activeCheckpoint,
       health:
         typeof parsed.health === "number" && parsed.health > 0
           ? parsed.health
@@ -327,6 +355,7 @@ export class SaveSystem {
     if (!this.isBrowser) return;
     try {
       localStorage.removeItem(GAME_CONSTANTS.SAVE.STORAGE_KEY);
+      localStorage.removeItem(GAME_CONSTANTS.SAVE.V4_STORAGE_KEY);
       localStorage.removeItem(GAME_CONSTANTS.SAVE.V3_STORAGE_KEY);
       localStorage.removeItem(GAME_CONSTANTS.SAVE.V2_STORAGE_KEY);
       localStorage.removeItem(GAME_CONSTANTS.SAVE.LEGACY_STORAGE_KEY);

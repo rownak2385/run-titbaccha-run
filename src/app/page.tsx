@@ -30,6 +30,9 @@ export default function HomePage() {
 
   // Load initial settings
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as unknown as Record<string, unknown>).__SAVE_SYSTEM__ = SaveSystem;
+    }
     const save = SaveSystem.load();
     if (save?.settings) {
       setIsMuted(Boolean(save.settings.muted));

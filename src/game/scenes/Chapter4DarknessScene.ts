@@ -5,14 +5,12 @@ import { PlayerController } from "../systems/PlayerController";
 import { SaveSystem } from "../systems/SaveSystem";
 import { SoundEffects } from "../systems/SoundEffects";
 import { MovingPlatform } from "../objects/MovingPlatform";
-import { BowSystem } from "../systems/BowSystem";
-import { Enemy } from "../objects/Enemy";
 import { TorchSystem } from "../systems/TorchSystem";
 import { PuzzleManager } from "../systems/PuzzleManager";
 import { CHAPTER_4_LEVEL_DATA } from "../data/Chapter4LevelData";
 
 export class Chapter4DarknessScene extends Phaser.Scene {
-  private player!: PlayerController;
+  public player!: PlayerController;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];
@@ -21,10 +19,9 @@ export class Chapter4DarknessScene extends Phaser.Scene {
   // Torch & Darkness System
   private torchSystem!: TorchSystem;
 
-  // Combat System
-  private bowSystem!: BowSystem;
-  private monstersGroup!: Phaser.Physics.Arcade.Group;
-  private monstersList: Enemy[] = [];
+  // Ticket Pieces Group (Combat-Free Exploration)
+  private ticketPickupsGroup!: Phaser.Physics.Arcade.Group;
+  private ticketPieceSprites: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
 
   // Background parallax layers
   private bgSky!: Phaser.GameObjects.TileSprite;
@@ -37,7 +34,6 @@ export class Chapter4DarknessScene extends Phaser.Scene {
   // Collectibles & Pouch
   private pouchSprite?: Phaser.Physics.Arcade.Sprite;
   private heartPickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
-  private arrowBundlePickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
 
   // End Chest
   private chestSprite!: Phaser.GameObjects.Sprite;
@@ -136,11 +132,7 @@ export class Chapter4DarknessScene extends Phaser.Scene {
     // 9. Torch & Cave Darkness System
     this.torchSystem = new TorchSystem(this, this.player, CHAPTER_4_LEVEL_DATA.sunlightZones);
 
-    // 10. Bow System
-    this.bowSystem = new BowSystem(this, this.player.sprite);
-    this.bowSystem.setupPlatformCollisions(this.platforms);
-
-    // 11. Traveler's Pouch at Entrance (Grants 3 Life Hearts & Mysterious Note)
+    // 10. Traveler's Pouch at Entrance (Grants 3 Life Hearts & Mysterious Note)
     const pouchCollected = collectedItems.has("traveler_pouch_ch4");
     if (!pouchCollected) {
       const pLoc = CHAPTER_4_LEVEL_DATA.travelerPouch;
@@ -176,58 +168,42 @@ export class Chapter4DarknessScene extends Phaser.Scene {
       });
     }
 
-    // 12. Arrow Bundles (Replenishment)
-    this.arrowBundlePickups.clear();
-    CHAPTER_4_LEVEL_DATA.arrowBundles.forEach((bundle) => {
-      if (!collectedItems.has(bundle.id)) {
-        const abSprite = this.physics.add.sprite(bundle.x, bundle.y, "arrow-bundle");
-        abSprite.setDepth(4);
-        const b = abSprite.body as Phaser.Physics.Arcade.Body;
-        if (b) b.setAllowGravity(false);
+    // 12. Train Ticket Pieces (3 Reachable World Collectibles in the Cavern)
+    this.ticketPickupsGroup = this.physics.add.group();
+    this.ticketPieceSprites.clear();
+    CHAPTER_4_LEVEL_DATA.ticketPieces.forEach((piece) => {
+      if (PuzzleManager.getInstance().isTicketPieceCollected(piece.id)) return;
 
-        this.physics.add.overlap(this.player.sprite, abSprite, () => {
-          if (!this.arrowBundlePickups.has(bundle.id)) return;
-          SaveSystem.collectItem(bundle.id);
-          const newAmmo = SaveSystem.addArrows(bundle.amount);
-          SoundEffects.playPickup();
-
-          EventBus.emit(GAME_EVENTS.ITEM_COLLECTED, bundle.id, `+${bundle.amount} Arrows`);
-          EventBus.emit(GAME_EVENTS.AMMO_UPDATED, newAmmo);
-          EventBus.emit(GAME_EVENTS.NOTIFICATION, `Found Quiver (+${bundle.amount} Arrows)!`);
-
-          abSprite.destroy();
-          this.arrowBundlePickups.delete(bundle.id);
-        });
-
-        this.arrowBundlePickups.set(bundle.id, abSprite);
+      const tSprite = this.physics.add.sprite(piece.x, piece.y, "ticket-piece-icon");
+      tSprite.setDepth(4);
+      const bBody = tSprite.body as Phaser.Physics.Arcade.Body;
+      if (bBody) {
+        bBody.setAllowGravity(false);
+        bBody.setImmovable(true);
       }
-    });
 
-    // 13. Exactly 3 Mandatory Cave Monsters (Dropping Ticket Pieces 01 to 03)
-    this.monstersGroup = this.physics.add.group();
-    this.monstersList = [];
-
-    CHAPTER_4_LEVEL_DATA.monsters.forEach((monConfig) => {
-      if (SaveSystem.isEnemyDefeated(monConfig.id)) return;
-
-      const monster = new Enemy(this, monConfig);
-      this.monstersGroup.add(monster);
-      this.monstersList.push(monster);
-
-      this.physics.add.collider(monster, this.platforms);
-      this.physics.add.collider(monster, this.movingPlatformsGroup);
-
-      this.physics.add.overlap(this.player.sprite, monster, () => {
-        if (!monster.getIsDefeated()) {
-          const knockbackDirX = this.player.sprite.x < monster.x ? -1 : 1;
-          this.player.takeDamage(25, knockbackDirX, -1);
-        }
+      this.tweens.add({
+        targets: tSprite,
+        y: piece.y - 8,
+        duration: 900 + Math.random() * 300,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
       });
+
+      this.physics.add.overlap(this.player.sprite, tSprite, () => {
+        if (!this.ticketPieceSprites.has(piece.id)) return;
+        SoundEffects.playPickup();
+        PuzzleManager.getInstance().collectTicketPiece(piece.id);
+        tSprite.destroy();
+        this.ticketPieceSprites.delete(piece.id);
+      });
+
+      this.ticketPickupsGroup.add(tSprite);
+      this.ticketPieceSprites.set(piece.id, tSprite);
     });
 
-    this.bowSystem.setupEnemyCollisions(this.monstersGroup);
-
-    // 14. Checkpoints (In / adjacent to Sunlight Safe Zones)
+    // 13. Checkpoints (In / adjacent to Sunlight Safe Zones)
     this.checkpointSprites.clear();
     this.activeCheckpointId = currentSave?.activeCheckpoint?.id || null;
 
@@ -422,17 +398,6 @@ export class Chapter4DarknessScene extends Phaser.Scene {
     // Update torch & darkness system
     this.torchSystem.update(time, delta);
 
-    // Update bow & arrow system
-    this.bowSystem.update(time, delta);
-
-    // Update monsters
-    for (let i = this.monstersList.length - 1; i >= 0; i--) {
-      const monster = this.monstersList[i];
-      if (monster && monster.active) {
-        monster.updateEnemy(time, delta);
-      }
-    }
-
     // Parallax scroll
     const scrollX = this.cameras.main.scrollX;
     this.bgSky.tilePositionX = scrollX * 0.1;
@@ -450,9 +415,9 @@ export class Chapter4DarknessScene extends Phaser.Scene {
       const isTicketComplete = PuzzleManager.getInstance().isTicketComplete();
       if (!isTicketComplete) {
         const count = PuzzleManager.getInstance().getTicketPieces().length;
-        this.chestPromptText.setText(`[Locked: Defeat 3 Cave Beasts for Train Ticket (${count}/3)]`);
+        this.chestPromptText.setText(`[Locked: Collect all 3 Train Ticket Fragments (${count}/3)]`);
       } else {
-        this.chestPromptText.setText("Press [E] to Open Cavern Vault Chest");
+        this.chestPromptText.setText("Press [E] to Unlock Highland Cavern Vault");
       }
       this.chestPromptText.setVisible(true);
 
@@ -461,9 +426,10 @@ export class Chapter4DarknessScene extends Phaser.Scene {
           this.unlockChest();
         } else {
           SoundEffects.playHazard();
+          const count = PuzzleManager.getInstance().getTicketPieces().length;
           EventBus.emit(
             GAME_EVENTS.NOTIFICATION,
-            "The Cavern Vault is sealed! You must defeat all 3 cave monsters and assemble the Train Ticket first!"
+            `The Cavern Vault is sealed! Collect all 3 Train Ticket Fragments from the ledges first! (${count}/3 found)`
           );
         }
       }
@@ -472,7 +438,7 @@ export class Chapter4DarknessScene extends Phaser.Scene {
     }
   }
 
-  private unlockChest(): void {
+  public unlockChest(): void {
     this.isChestUnlocked = true;
     this.chestSprite.setTexture("chest-ch4-open");
     this.chestPromptText.setVisible(false);
@@ -515,13 +481,6 @@ export class Chapter4DarknessScene extends Phaser.Scene {
     if (this.player) {
       try {
         this.player.destroy();
-      } catch {
-        // Ignored during shutdown
-      }
-    }
-    if (this.bowSystem) {
-      try {
-        this.bowSystem.destroy();
       } catch {
         // Ignored during shutdown
       }

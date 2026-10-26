@@ -5,23 +5,18 @@ import { PlayerController } from "../systems/PlayerController";
 import { SaveSystem } from "../systems/SaveSystem";
 import { SoundEffects } from "../systems/SoundEffects";
 import { MovingPlatform } from "../objects/MovingPlatform";
-import { BowSystem } from "../systems/BowSystem";
-import { Enemy } from "../objects/Enemy";
 import { PuzzleManager } from "../systems/PuzzleManager";
 import { CHAPTER_3_LEVEL_DATA } from "../data/Chapter3LevelData";
 
 export class Chapter3RescueScene extends Phaser.Scene {
-  private player!: PlayerController;
+  public player!: PlayerController;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];
   private hazards!: Phaser.Physics.Arcade.StaticGroup;
 
-  // Combat System
-  private bowSystem!: BowSystem;
-  private enemiesGroup!: Phaser.Physics.Arcade.Group;
-  private enemiesList: Enemy[] = [];
-  private bowPickupSprite?: Phaser.Physics.Arcade.Sprite;
+  // Photo Fragments Pickups Group (Combat-Free Exploration)
+  private photoPickupsGroup!: Phaser.Physics.Arcade.Group;
 
   // Background parallax layers
   private bgSky!: Phaser.GameObjects.TileSprite;
@@ -33,7 +28,7 @@ export class Chapter3RescueScene extends Phaser.Scene {
 
   // Collectibles
   private heartPickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
-  private arrowBundlePickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
+  private photoPieceSprites: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
 
   // End Chest & Cave Entrance
   private chestSprite!: Phaser.GameObjects.Sprite;
@@ -130,109 +125,42 @@ export class Chapter3RescueScene extends Phaser.Scene {
       this.player.setHealth(currentSave.health);
     }
 
-    // 9. Bow System & Weapon Acquisition Pedestal
-    this.bowSystem = new BowSystem(this, this.player.sprite);
-    this.bowSystem.setupPlatformCollisions(this.platforms);
+    // 9. Photo Puzzle Pickups (9 Reachable World Collectibles across Forest Route)
+    this.photoPickupsGroup = this.physics.add.group();
+    this.photoPieceSprites.clear();
+    CHAPTER_3_LEVEL_DATA.photoPieces.forEach((piece) => {
+      if (PuzzleManager.getInstance().isPhotoPieceCollected(piece.id)) return;
 
-    const hasBowAlready = Boolean(currentSave?.hasBow);
-    if (!hasBowAlready) {
-      const bowLoc = CHAPTER_3_LEVEL_DATA.bowLocation;
-      this.bowPickupSprite = this.physics.add.sprite(bowLoc.x, bowLoc.y, "bow-pickup-sprite");
-      this.bowPickupSprite.setDepth(4);
-      const bBody = this.bowPickupSprite.body as Phaser.Physics.Arcade.Body;
-      if (bBody) bBody.setAllowGravity(false);
+      const pSprite = this.physics.add.sprite(piece.x, piece.y, "photo-piece-icon");
+      pSprite.setDepth(4);
+      const bBody = pSprite.body as Phaser.Physics.Arcade.Body;
+      if (bBody) {
+        bBody.setAllowGravity(false);
+        bBody.setImmovable(true);
+      }
 
       this.tweens.add({
-        targets: this.bowPickupSprite,
-        y: bowLoc.y - 12,
-        duration: 800,
+        targets: pSprite,
+        y: piece.y - 10,
+        duration: 900 + Math.random() * 300,
         yoyo: true,
         repeat: -1,
         ease: "Sine.easeInOut",
       });
 
-      this.physics.add.overlap(this.player.sprite, this.bowPickupSprite, () => {
-        if (!this.bowPickupSprite) return;
-        SoundEffects.playFanfare();
-        SaveSystem.setBowAcquired(GAME_CONSTANTS.COMBAT.INITIAL_QUIVER);
-
-        EventBus.emit(GAME_EVENTS.BOW_ACQUIRED);
-        EventBus.emit(
-          GAME_EVENTS.NOTIFICATION,
-          "🏹 Ronny's Hunting Bow Acquired! Mouse aims, Left-Click fires arrows!"
-        );
-        EventBus.emit(GAME_EVENTS.AMMO_UPDATED, GAME_CONSTANTS.COMBAT.INITIAL_QUIVER);
-
-        this.tweens.add({
-          targets: this.bowPickupSprite,
-          scaleX: 1.8,
-          scaleY: 1.8,
-          alpha: 0,
-          duration: 300,
-          onComplete: () => {
-            this.bowPickupSprite?.destroy();
-            this.bowPickupSprite = undefined;
-          },
-        });
+      this.physics.add.overlap(this.player.sprite, pSprite, () => {
+        if (!this.photoPieceSprites.has(piece.id)) return;
+        SoundEffects.playPickup();
+        PuzzleManager.getInstance().collectPhotoPiece(piece.id);
+        pSprite.destroy();
+        this.photoPieceSprites.delete(piece.id);
       });
-    }
 
-    // 10. Arrow Bundle Pickups (Quivers)
-    this.arrowBundlePickups.clear();
-    CHAPTER_3_LEVEL_DATA.arrowBundles.forEach((bundle) => {
-      if (!collectedItems.has(bundle.id)) {
-        const abSprite = this.physics.add.sprite(bundle.x, bundle.y, "arrow-bundle");
-        abSprite.setDepth(4);
-        const b = abSprite.body as Phaser.Physics.Arcade.Body;
-        if (b) b.setAllowGravity(false);
-
-        this.physics.add.overlap(this.player.sprite, abSprite, () => {
-          if (!this.arrowBundlePickups.has(bundle.id)) return;
-          SaveSystem.collectItem(bundle.id);
-          const newAmmo = SaveSystem.addArrows(bundle.amount);
-          SoundEffects.playPickup();
-
-          EventBus.emit(GAME_EVENTS.ITEM_COLLECTED, bundle.id, `+${bundle.amount} Arrows`);
-          EventBus.emit(GAME_EVENTS.AMMO_UPDATED, newAmmo);
-          EventBus.emit(GAME_EVENTS.NOTIFICATION, `Found Quiver (+${bundle.amount} Arrows)!`);
-
-          abSprite.destroy();
-          this.arrowBundlePickups.delete(bundle.id);
-        });
-
-        this.arrowBundlePickups.set(bundle.id, abSprite);
-      }
+      this.photoPickupsGroup.add(pSprite);
+      this.photoPieceSprites.set(piece.id, pSprite);
     });
 
-    // 11. 9 Mandatory Hostile Encounters
-    this.enemiesGroup = this.physics.add.group();
-    this.enemiesList = [];
-
-    CHAPTER_3_LEVEL_DATA.enemies.forEach((enemyCfg) => {
-      // Check if already permanently defeated
-      if (SaveSystem.isEnemyDefeated(enemyCfg.id)) return;
-
-      const enemy = new Enemy(this, enemyCfg);
-      this.enemiesGroup.add(enemy);
-      this.enemiesList.push(enemy);
-
-      // Collide enemies with platforms
-      this.physics.add.collider(enemy, this.platforms);
-      this.physics.add.collider(enemy, this.movingPlatformsGroup);
-
-      // Contact damage with player
-      this.physics.add.overlap(this.player.sprite, enemy, () => {
-        if (!enemy.getIsDefeated()) {
-          const knockbackDirX = this.player.sprite.x < enemy.x ? -1 : 1;
-          this.player.takeDamage(20, knockbackDirX, -1);
-        }
-      });
-    });
-
-    // Link arrows to enemies
-    this.bowSystem.setupEnemyCollisions(this.enemiesGroup);
-
-    // 12. Checkpoints
+    // 10. Checkpoints
     this.checkpointSprites.clear();
     this.activeCheckpointId = currentSave?.activeCheckpoint?.id || null;
 
@@ -424,17 +352,6 @@ export class Chapter3RescueScene extends Phaser.Scene {
     // Update player
     this.player.update(time, delta);
 
-    // Update combat & bow system
-    this.bowSystem.update(time, delta);
-
-    // Update enemies
-    for (let i = this.enemiesList.length - 1; i >= 0; i--) {
-      const enemy = this.enemiesList[i];
-      if (enemy && enemy.active) {
-        enemy.updateEnemy(time, delta);
-      }
-    }
-
     // Parallax scroll
     const scrollX = this.cameras.main.scrollX;
     this.bgSky.tilePositionX = scrollX * 0.1;
@@ -452,9 +369,9 @@ export class Chapter3RescueScene extends Phaser.Scene {
       const isPhotoComplete = PuzzleManager.getInstance().isPhotoComplete();
       if (!isPhotoComplete) {
         const count = PuzzleManager.getInstance().getPhotoPieces().length;
-        this.chestPromptText.setText(`[Locked: Defeat 9 Beasts for Memory Photo (${count}/9)]`);
+        this.chestPromptText.setText(`[Locked: Collect all 9 Photo Fragments (${count}/9)]`);
       } else {
-        this.chestPromptText.setText("Press [E] to Open Ancient Forest Chest");
+        this.chestPromptText.setText("Press [E] to Unlock Ancient Forest Vault");
       }
       this.chestPromptText.setVisible(true);
 
@@ -463,9 +380,10 @@ export class Chapter3RescueScene extends Phaser.Scene {
           this.unlockChest();
         } else {
           SoundEffects.playHazard();
+          const count = PuzzleManager.getInstance().getPhotoPieces().length;
           EventBus.emit(
             GAME_EVENTS.NOTIFICATION,
-            "The chest remains sealed! You must defeat all 9 beasts and assemble the Memory Photo first!"
+            `The vault remains sealed! Search the high canopy and collect all 9 Photo Fragments first! (${count}/9 found)`
           );
         }
       }
@@ -474,7 +392,7 @@ export class Chapter3RescueScene extends Phaser.Scene {
     }
   }
 
-  private unlockChest(): void {
+  public unlockChest(): void {
     this.isChestUnlocked = true;
     this.chestSprite.setTexture("chest-ch3-open");
     this.chestPromptText.setVisible(false);
@@ -516,13 +434,6 @@ export class Chapter3RescueScene extends Phaser.Scene {
     if (this.player) {
       try {
         this.player.destroy();
-      } catch {
-        // Ignored during shutdown
-      }
-    }
-    if (this.bowSystem) {
-      try {
-        this.bowSystem.destroy();
       } catch {
         // Ignored during shutdown
       }

@@ -42,8 +42,6 @@ export interface Chapter5LevelDefinition {
   hazards: HazardConfig[];
   ticketGate: { x: number; y: number };
   hearts: HeartConfig[];
-  arrowBundles: ArrowBundleConfig[];
-  dinosaurs: EnemyConfig[];
   checkpoints: CheckpointData[];
   chest: { x: number; y: number };
 }
@@ -142,86 +140,6 @@ export const CHAPTER_5_LEVEL_DATA: Chapter5LevelDefinition = {
     { id: "ch5_heart_05", x: 4150, y: 460 },
     { id: "ch5_heart_06", x: 5000, y: 460 },
     { id: "ch5_heart_07", x: 5900, y: 460 },
-  ],
-
-  // Arrow Quiver Refills (Generous supply for bow combat vs dinosaurs)
-  arrowBundles: [
-    { id: "ch5_arrows_01", x: 1550, y: 470, amount: 5 },
-    { id: "ch5_arrows_02", x: 2350, y: 470, amount: 5 },
-    { id: "ch5_arrows_03", x: 3200, y: 470, amount: 5 },
-    { id: "ch5_arrows_04", x: 4050, y: 470, amount: 5 },
-    { id: "ch5_arrows_05", x: 4900, y: 470, amount: 5 },
-    { id: "ch5_arrows_06", x: 5750, y: 470, amount: 5 },
-  ],
-
-  // Aerial Flying Dinosaurs (Attacking the train roof)
-  dinosaurs: [
-    {
-      id: "ch5_dino_01",
-      x: 1800,
-      y: 380,
-      archetype: "dinosaur",
-      patrolMinX: 1600,
-      patrolMaxX: 2000,
-      maxHp: 50,
-      speed: 100,
-      dropItemType: "heart",
-    },
-    {
-      id: "ch5_dino_02",
-      x: 2600,
-      y: 360,
-      archetype: "dinosaur",
-      patrolMinX: 2350,
-      patrolMaxX: 2850,
-      maxHp: 50,
-      speed: 110,
-      dropItemType: "arrow",
-    },
-    {
-      id: "ch5_dino_03",
-      x: 3450,
-      y: 370,
-      archetype: "dinosaur",
-      patrolMinX: 3200,
-      patrolMaxX: 3700,
-      maxHp: 50,
-      speed: 115,
-      dropItemType: "heart",
-    },
-    {
-      id: "ch5_dino_04",
-      x: 4300,
-      y: 350,
-      archetype: "dinosaur",
-      patrolMinX: 4050,
-      patrolMaxX: 4550,
-      maxHp: 50,
-      speed: 120,
-      dropItemType: "arrow",
-    },
-    {
-      id: "ch5_dino_05",
-      x: 5150,
-      y: 370,
-      archetype: "dinosaur",
-      patrolMinX: 4900,
-      patrolMaxX: 5400,
-      maxHp: 50,
-      speed: 125,
-      dropItemType: "heart",
-    },
-    {
-      id: "ch5_dino_06",
-      x: 6000,
-      y: 350,
-      archetype: "dinosaur",
-      patrolMinX: 5750,
-      patrolMaxX: 6300,
-      maxHp: 50,
-      speed: 130,
-      dropItemType: "arrow",
-    },
   ],
 
   // Checkpoints

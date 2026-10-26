@@ -5,22 +5,15 @@ import { PlayerController } from "../systems/PlayerController";
 import { SaveSystem } from "../systems/SaveSystem";
 import { SoundEffects } from "../systems/SoundEffects";
 import { MovingPlatform } from "../objects/MovingPlatform";
-import { BowSystem } from "../systems/BowSystem";
-import { Enemy } from "../objects/Enemy";
 import { PuzzleManager } from "../systems/PuzzleManager";
 import { CHAPTER_5_LEVEL_DATA } from "../data/Chapter5LevelData";
 
 export class Chapter5StationScene extends Phaser.Scene {
-  private player!: PlayerController;
+  public player!: PlayerController;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];
   private hazards!: Phaser.Physics.Arcade.StaticGroup;
-
-  // Combat System
-  private bowSystem!: BowSystem;
-  private dinosaursGroup!: Phaser.Physics.Arcade.Group;
-  private dinosaursList: Enemy[] = [];
 
   // Parallax Backgrounds
   private bgSky!: Phaser.GameObjects.TileSprite;
@@ -38,7 +31,6 @@ export class Chapter5StationScene extends Phaser.Scene {
 
   // Pickups
   private heartPickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
-  private arrowBundlePickups: Map<string, Phaser.Physics.Arcade.Sprite> = new Map();
 
   // End Chest
   private chestSprite!: Phaser.GameObjects.Sprite;
@@ -130,11 +122,7 @@ export class Chapter5StationScene extends Phaser.Scene {
       this.player.setHealth(currentSave.health);
     }
 
-    // 8. Bow & Combat System
-    this.bowSystem = new BowSystem(this, this.player.sprite);
-    this.bowSystem.setupPlatformCollisions(this.platforms);
-
-    // 9. Station Ticket Inspection Gate (x = 1180)
+    // 8. Station Ticket Inspection Gate (x = 1180)
     const gateLoc = CHAPTER_5_LEVEL_DATA.ticketGate;
     this.ticketGateSprite = this.add.sprite(gateLoc.x, gateLoc.y, "station-ticket-gate").setDepth(4);
     this.ticketBarrier = this.physics.add.staticSprite(gateLoc.x + 30, gateLoc.y - 10, "broken-bridge");
@@ -165,28 +153,7 @@ export class Chapter5StationScene extends Phaser.Scene {
       this.ticketGateSprite.setAlpha(0.6);
     }
 
-    // 10. Flying Dinosaurs (Pterosaur Aerial Threats)
-    this.dinosaursGroup = this.physics.add.group();
-    this.dinosaursList = [];
-
-    CHAPTER_5_LEVEL_DATA.dinosaurs.forEach((dinoConfig) => {
-      if (SaveSystem.isEnemyDefeated(dinoConfig.id)) return;
-
-      const dino = new Enemy(this, dinoConfig);
-      this.dinosaursGroup.add(dino);
-      this.dinosaursList.push(dino);
-
-      this.physics.add.overlap(this.player.sprite, dino, () => {
-        if (!dino.getIsDefeated()) {
-          const knockbackDirX = this.player.sprite.x < dino.x ? -1 : 1;
-          this.player.takeDamage(20, knockbackDirX, -1);
-        }
-      });
-    });
-
-    this.bowSystem.setupEnemyCollisions(this.dinosaursGroup);
-
-    // 11. Checkpoints
+    // 9. Checkpoints
     this.checkpointSprites.clear();
     this.activeCheckpointId = currentSave?.activeCheckpoint?.id || null;
 
@@ -223,34 +190,7 @@ export class Chapter5StationScene extends Phaser.Scene {
       });
     });
 
-    // 12. Arrow Bundles (Replenishment for bow combat)
-    this.arrowBundlePickups.clear();
-    CHAPTER_5_LEVEL_DATA.arrowBundles.forEach((bundle) => {
-      if (!collectedItems.has(bundle.id)) {
-        const abSprite = this.physics.add.sprite(bundle.x, bundle.y, "arrow-bundle");
-        abSprite.setDepth(4);
-        const b = abSprite.body as Phaser.Physics.Arcade.Body;
-        if (b) b.setAllowGravity(false);
-
-        this.physics.add.overlap(this.player.sprite, abSprite, () => {
-          if (!this.arrowBundlePickups.has(bundle.id)) return;
-          SaveSystem.collectItem(bundle.id);
-          const newAmmo = SaveSystem.addArrows(bundle.amount);
-          SoundEffects.playPickup();
-
-          EventBus.emit(GAME_EVENTS.ITEM_COLLECTED, bundle.id, `+${bundle.amount} Arrows`);
-          EventBus.emit(GAME_EVENTS.AMMO_UPDATED, newAmmo);
-          EventBus.emit(GAME_EVENTS.NOTIFICATION, `Found Quiver (+${bundle.amount} Arrows)!`);
-
-          abSprite.destroy();
-          this.arrowBundlePickups.delete(bundle.id);
-        });
-
-        this.arrowBundlePickups.set(bundle.id, abSprite);
-      }
-    });
-
-    // 13. Heart Pickups
+    // 10. Heart Pickups
     this.heartPickups.clear();
     CHAPTER_5_LEVEL_DATA.hearts.forEach((heart) => {
       if (!collectedItems.has(heart.id)) {
@@ -405,17 +345,6 @@ export class Chapter5StationScene extends Phaser.Scene {
     // Update player
     this.player.update(time, delta);
 
-    // Update bow & arrow system
-    this.bowSystem.update(time, delta);
-
-    // Update flying dinosaurs
-    for (let i = this.dinosaursList.length - 1; i >= 0; i--) {
-      const dino = this.dinosaursList[i];
-      if (dino && dino.active) {
-        dino.updateEnemy(time, delta);
-      }
-    }
-
     // Parallax scroll with simulated train motion sensation
     const scrollX = this.cameras.main.scrollX;
     this.bgSky.tilePositionX = scrollX * 0.15;
@@ -518,13 +447,6 @@ export class Chapter5StationScene extends Phaser.Scene {
     if (this.player) {
       try {
         this.player.destroy();
-      } catch {
-        // Ignored during shutdown
-      }
-    }
-    if (this.bowSystem) {
-      try {
-        this.bowSystem.destroy();
       } catch {
         // Ignored during shutdown
       }

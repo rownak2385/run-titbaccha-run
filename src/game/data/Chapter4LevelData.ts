@@ -26,11 +26,11 @@ export interface CollectibleHeartConfig {
   y: number;
 }
 
-export interface ArrowBundleConfig {
+export interface TicketPieceConfig {
   id: string;
   x: number;
   y: number;
-  amount: number;
+  label: string;
 }
 
 export const CHAPTER_4_LEVEL_DATA = {
@@ -140,55 +140,12 @@ export const CHAPTER_4_LEVEL_DATA = {
     y: 620,
   },
 
-  // Arrow Bundles for Bow Combat
-  arrowBundles: [
-    { id: "bundle_ch4_01", x: 450, y: 510, amount: 5 },
-    { id: "bundle_ch4_02", x: 1650, y: 420, amount: 5 },
-    { id: "bundle_ch4_03", x: 2800, y: 420, amount: 5 },
-    { id: "bundle_ch4_04", x: 3950, y: 620, amount: 5 },
-    { id: "bundle_ch4_05", x: 5200, y: 430, amount: 5 },
-    { id: "bundle_ch4_06", x: 6200, y: 620, amount: 5 },
-  ] as ArrowBundleConfig[],
-
-  // Exactly 3 Mandatory Cave Monsters (Dropping ticket pieces 01 to 03)
-  monsters: [
-    {
-      id: "ch4_monster_01",
-      x: 1550,
-      y: 610,
-      archetype: "monster",
-      patrolMinX: 1420,
-      patrolMaxX: 1720,
-      maxHp: 100, // 2 arrow hits
-      speed: 55,
-      dropItemId: "ticket_piece_01",
-      dropItemType: "ticket",
-    },
-    {
-      id: "ch4_monster_02",
-      x: 3250,
-      y: 610,
-      archetype: "monster",
-      patrolMinX: 3050,
-      patrolMaxX: 3450,
-      maxHp: 100, // 2 arrow hits
-      speed: 60,
-      dropItemId: "ticket_piece_02",
-      dropItemType: "ticket",
-    },
-    {
-      id: "ch4_monster_03",
-      x: 5350,
-      y: 610,
-      archetype: "monster",
-      patrolMinX: 5150,
-      patrolMaxX: 5550,
-      maxHp: 100, // 2 arrow hits
-      speed: 65,
-      dropItemId: "ticket_piece_03",
-      dropItemType: "ticket",
-    },
-  ] as EnemyConfig[],
+  // Exactly 3 Unique Reachable Train Ticket Fragments (Combat-Free Exploration)
+  ticketPieces: [
+    { id: "ticket_piece_01", x: 1650, y: 420, label: "Ticket Scrap 1 of 3" },
+    { id: "ticket_piece_02", x: 3150, y: 350, label: "Ticket Scrap 2 of 3" },
+    { id: "ticket_piece_03", x: 5200, y: 430, label: "Ticket Scrap 3 of 3" },
+  ] as TicketPieceConfig[],
 
   // Heart pickups for vitality recovery
   hearts: [

@@ -45,6 +45,10 @@ export class CharacterAssetManager {
 
     const characters = this.manifest.characters;
     (Object.keys(characters) as CharacterId[]).forEach((charId) => {
+      // MASTER PROMPT 12 MANDATE: Only Titibaccha uses external PNG frame sequences.
+      // Ronny, Fox, and all supporting NPCs use lightweight procedural vector illustrations.
+      if (charId !== "titibaccha") return;
+
       const meta = characters[charId];
 
       // 1. Queue master sprite sheet if declared
