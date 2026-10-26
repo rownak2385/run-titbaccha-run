@@ -10,7 +10,7 @@ import { CheckpointData } from "@/types/game";
 import { CharacterAssetManager } from "../systems/CharacterAssetManager";
 
 export class Chapter1GardenScene extends Phaser.Scene {
-  private player!: PlayerController;
+  public player!: PlayerController;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private movingPlatformsGroup!: Phaser.Physics.Arcade.Group;
   private movingPlatformsList: MovingPlatform[] = [];

@@ -71,49 +71,70 @@ export class SaveSystem {
       // 1. Try reading V4 save
       const serializedV4 = localStorage.getItem(GAME_CONSTANTS.SAVE.STORAGE_KEY);
       if (serializedV4) {
-        const parsed = JSON.parse(serializedV4) as Partial<SaveData>;
-        if (parsed.version === GAME_CONSTANTS.SAVE.SCHEMA_VERSION) {
-          return this.sanitizeSaveData(parsed);
+        try {
+          const parsed = JSON.parse(serializedV4) as Partial<SaveData>;
+          if (parsed && parsed.version === GAME_CONSTANTS.SAVE.SCHEMA_VERSION) {
+            return this.sanitizeSaveData(parsed);
+          }
+        } catch (jsonErr) {
+          console.warn("Corrupted V4 save payload encountered. Recovering to clean default save:", jsonErr);
+          const recovered = this.getDefaultSave();
+          this.save(recovered);
+          return recovered;
         }
       }
 
       // 2. Try migrating V3 save
       const serializedV3 = localStorage.getItem(GAME_CONSTANTS.SAVE.V3_STORAGE_KEY);
       if (serializedV3) {
-        console.info("Found V3 save data. Performing seamless migration to V4...");
-        const v3Parsed = JSON.parse(serializedV3) as Partial<SaveData>;
-        const migratedSave = this.sanitizeSaveData({
-          ...v3Parsed,
-          version: GAME_CONSTANTS.SAVE.SCHEMA_VERSION,
-        });
-        this.save(migratedSave);
-        return migratedSave;
+        try {
+          console.info("Found V3 save data. Performing seamless migration to V4...");
+          const v3Parsed = JSON.parse(serializedV3) as Partial<SaveData>;
+          const migratedSave = this.sanitizeSaveData({
+            ...v3Parsed,
+            version: GAME_CONSTANTS.SAVE.SCHEMA_VERSION,
+          });
+          this.save(migratedSave);
+          return migratedSave;
+        } catch (v3Err) {
+          console.warn("Corrupted V3 save encountered during migration:", v3Err);
+        }
       }
 
       // 3. Try migrating V2 save
       const serializedV2 = localStorage.getItem(GAME_CONSTANTS.SAVE.V2_STORAGE_KEY);
       if (serializedV2) {
-        console.info("Found V2 save data. Performing seamless migration to V4...");
-        const v2Parsed = JSON.parse(serializedV2) as Record<string, unknown>;
-        const migratedSave = this.migrateFromV2(v2Parsed);
-        this.save(migratedSave);
-        return migratedSave;
+        try {
+          console.info("Found V2 save data. Performing seamless migration to V4...");
+          const v2Parsed = JSON.parse(serializedV2) as Record<string, unknown>;
+          const migratedSave = this.migrateFromV2(v2Parsed);
+          this.save(migratedSave);
+          return migratedSave;
+        } catch (v2Err) {
+          console.warn("Corrupted V2 save encountered during migration:", v2Err);
+        }
       }
 
       // 4. Try migrating Legacy V1 save
       const serializedV1 = localStorage.getItem(GAME_CONSTANTS.SAVE.LEGACY_STORAGE_KEY);
       if (serializedV1) {
-        console.info("Found legacy V1 save data. Performing seamless migration to V4...");
-        const v1Parsed = JSON.parse(serializedV1) as Record<string, unknown>;
-        const migratedSave = this.migrateFromV1(v1Parsed);
-        this.save(migratedSave);
-        return migratedSave;
+        try {
+          console.info("Found legacy V1 save data. Performing seamless migration to V4...");
+          const v1Parsed = JSON.parse(serializedV1) as Record<string, unknown>;
+          const migratedSave = this.migrateFromV1(v1Parsed);
+          this.save(migratedSave);
+          return migratedSave;
+        } catch (v1Err) {
+          console.warn("Corrupted V1 save encountered during migration:", v1Err);
+        }
       }
 
       return null;
     } catch (err) {
       console.error("Failed to load or migrate save data:", err);
-      return null;
+      const recovered = this.getDefaultSave();
+      this.save(recovered);
+      return recovered;
     }
   }
 

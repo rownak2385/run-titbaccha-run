@@ -16,7 +16,24 @@ async function run() {
     }
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // Poll until Next.js is responding on port 3000
+  let serverReady = false;
+  for (let i = 0; i < 30; i++) {
+    try {
+      const res = await fetch("http://localhost:3000");
+      if (res.ok || res.status < 500) {
+        serverReady = true;
+        break;
+      }
+    } catch {
+      // wait
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  if (!serverReady) {
+    throw new Error("Next.js server failed to respond on port 3000 within 15 seconds.");
+  }
+  console.log("   Next.js production server is READY on http://localhost:3000");
 
   console.log("2. Launching Headless Chrome on port 9222...");
   const chromeProcess = spawn(
@@ -31,7 +48,13 @@ async function run() {
     { stdio: "ignore" }
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 2500));
+  for (let i = 0; i < 20; i++) {
+    try {
+      const res = await fetch("http://localhost:9222/json/list");
+      if (res.ok) break;
+    } catch {}
+    await new Promise((r) => setTimeout(r, 400));
+  }
 
   try {
     const targetsRes = await fetch("http://localhost:9222/json/list");
