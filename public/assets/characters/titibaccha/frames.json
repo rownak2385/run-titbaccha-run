@@ -1,0 +1,69 @@
+{
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "frames": {
+    "idle": [
+      "idle/idle_00.png",
+      "idle/idle_01.png",
+      "idle/idle_02.png",
+      "idle/idle_03.png",
+      "idle/idle_04.png",
+      "idle/idle_05.png",
+      "idle/idle_06.png",
+      "idle/idle_07.png"
+    ],
+    "running": [
+      "running/running_00.png",
+      "running/running_01.png",
+      "running/running_02.png",
+      "running/running_03.png",
+      "running/running_04.png",
+      "running/running_05.png",
+      "running/running_06.png",
+      "running/running_07.png"
+    ],
+    "jumping": [
+      "jumping/jumping_00.png",
+      "jumping/jumping_01.png",
+      "jumping/jumping_02.png",
+      "jumping/jumping_03.png",
+      "jumping/jumping_04.png",
+      "jumping/jumping_05.png"
+    ],
+    "falling": [
+      "falling/falling_00.png",
+      "falling/falling_01.png",
+      "falling/falling_02.png",
+      "falling/falling_03.png",
+      "falling/falling_04.png",
+      "falling/falling_05.png"
+    ],
+    "hurt": [
+      "hurt/hurt_00.png",
+      "hurt/hurt_01.png",
+      "hurt/hurt_02.png",
+      "hurt/hurt_03.png",
+      "hurt/hurt_04.png",
+      "hurt/hurt_05.png"
+    ],
+    "eating": [
+      "eating/eating_00.png",
+      "eating/eating_01.png",
+      "eating/eating_02.png",
+      "eating/eating_03.png",
+      "eating/eating_04.png",
+      "eating/eating_05.png"
+    ],
+    "happy": [
+      "happy/happy_00.png",
+      "happy/happy_01.png",
+      "happy/happy_02.png"
+    ],
+    "sad": [
+      "sad/sad_00.png",
+      "sad/sad_01.png",
+      "sad/sad_02.png"
+    ]
+  },
+  "prototype": true
+}

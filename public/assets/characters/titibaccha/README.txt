@@ -1,0 +1,1 @@
+Titi gameplay frame extraction v0.1; transparent RGBA PNGs, 128x128 unified frame. First-pass prototype assets only: animation motion, look consistency and foot alignments require in-engine verification. Source sheet was AI-generated. Character follows approved design including leaf pendant. Shooting/bow poses still to be produced.

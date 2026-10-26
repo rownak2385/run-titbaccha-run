@@ -1,0 +1,345 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "2.0.0",
+  "name": "Run Titibaccha, Run! Production Character Asset Manifest",
+  "description": "Authoritative character sprite sheet & frame sequence specification for pipeline art and Google Flow integration.",
+  "characters": {
+    "titibaccha": {
+      "id": "titibaccha",
+      "name": "Titibaccha (Protagonist Chick)",
+      "defaultFacing": "right",
+      "spritesheetPath": "/assets/characters/titibaccha.png",
+      "frameSequenceDir": "/assets/characters/titibaccha/",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "textureFilter": "nearest",
+      "physics": {
+        "width": 32,
+        "height": 36,
+        "offsetX": 48,
+        "offsetY": 85
+      },
+      "animations": {
+        "idle": {
+          "key": "titi_idle",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+          "framePaths": [
+            "/assets/characters/titibaccha/idle/idle_00.png",
+            "/assets/characters/titibaccha/idle/idle_01.png",
+            "/assets/characters/titibaccha/idle/idle_02.png",
+            "/assets/characters/titibaccha/idle/idle_03.png",
+            "/assets/characters/titibaccha/idle/idle_04.png",
+            "/assets/characters/titibaccha/idle/idle_05.png",
+            "/assets/characters/titibaccha/idle/idle_06.png",
+            "/assets/characters/titibaccha/idle/idle_07.png"
+          ],
+          "frameRate": 6,
+          "repeat": -1,
+          "description": "Alert upright posture with subtle chest breathing, eye blink, and necklace pendant"
+        },
+        "running": {
+          "key": "titi_running",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+          "framePaths": [
+            "/assets/characters/titibaccha/running/running_00.png",
+            "/assets/characters/titibaccha/running/running_01.png",
+            "/assets/characters/titibaccha/running/running_02.png",
+            "/assets/characters/titibaccha/running/running_03.png",
+            "/assets/characters/titibaccha/running/running_04.png",
+            "/assets/characters/titibaccha/running/running_05.png",
+            "/assets/characters/titibaccha/running/running_06.png",
+            "/assets/characters/titibaccha/running/running_07.png"
+          ],
+          "frameRate": 10,
+          "repeat": -1,
+          "description": "Energetic trot with alternating bright orange feet, wing flutter, and tilted body"
+        },
+        "jumping": {
+          "key": "titi_jumping",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5],
+          "framePaths": [
+            "/assets/characters/titibaccha/jumping/jumping_00.png",
+            "/assets/characters/titibaccha/jumping/jumping_01.png",
+            "/assets/characters/titibaccha/jumping/jumping_02.png",
+            "/assets/characters/titibaccha/jumping/jumping_03.png",
+            "/assets/characters/titibaccha/jumping/jumping_04.png",
+            "/assets/characters/titibaccha/jumping/jumping_05.png"
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "description": "Upward trajectory with tucked orange feet and lifted wings"
+        },
+        "falling": {
+          "key": "titi_falling",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5],
+          "framePaths": [
+            "/assets/characters/titibaccha/falling/falling_00.png",
+            "/assets/characters/titibaccha/falling/falling_01.png",
+            "/assets/characters/titibaccha/falling/falling_02.png",
+            "/assets/characters/titibaccha/falling/falling_03.png",
+            "/assets/characters/titibaccha/falling/falling_04.png",
+            "/assets/characters/titibaccha/falling/falling_05.png"
+          ],
+          "frameRate": 6,
+          "repeat": -1,
+          "description": "Downward dangle with fluttering wingtips and tilted crest"
+        },
+        "hurt": {
+          "key": "titi_hurt",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5],
+          "framePaths": [
+            "/assets/characters/titibaccha/hurt/hurt_00.png",
+            "/assets/characters/titibaccha/hurt/hurt_01.png",
+            "/assets/characters/titibaccha/hurt/hurt_02.png",
+            "/assets/characters/titibaccha/hurt/hurt_03.png",
+            "/assets/characters/titibaccha/hurt/hurt_04.png",
+            "/assets/characters/titibaccha/hurt/hurt_05.png"
+          ],
+          "frameRate": 8,
+          "repeat": 0,
+          "description": "Squinting recoil with ruffled feathers upon sustaining hazard damage"
+        },
+        "eating": {
+          "key": "titi_eating",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5],
+          "framePaths": [
+            "/assets/characters/titibaccha/eating/eating_00.png",
+            "/assets/characters/titibaccha/eating/eating_01.png",
+            "/assets/characters/titibaccha/eating/eating_02.png",
+            "/assets/characters/titibaccha/eating/eating_03.png",
+            "/assets/characters/titibaccha/eating/eating_04.png",
+            "/assets/characters/titibaccha/eating/eating_05.png"
+          ],
+          "frameRate": 6,
+          "repeat": -1,
+          "description": "Head dipped down pecking eagerly at grain or fox bait"
+        },
+        "shooting": {
+          "key": "titi_shooting",
+          "format": "procedural",
+          "frames": [12, 13],
+          "framePaths": ["/assets/characters/titibaccha/shooting_0.png", "/assets/characters/titibaccha/shooting_1.png"],
+          "frameRate": 6,
+          "repeat": 0,
+          "description": "Aiming and releasing twig slingshot/bow for future chapters (Procedural fallback active)"
+        },
+        "happy": {
+          "key": "titi_happy",
+          "format": "frameSequence",
+          "frames": [0, 1, 2],
+          "framePaths": [
+            "/assets/characters/titibaccha/happy/happy_00.png",
+            "/assets/characters/titibaccha/happy/happy_01.png",
+            "/assets/characters/titibaccha/happy/happy_02.png"
+          ],
+          "frameRate": 6,
+          "repeat": -1,
+          "description": "Joyful hop with closed cheerful curved eyes and flutter"
+        },
+        "sad": {
+          "key": "titi_sad",
+          "format": "frameSequence",
+          "frames": [0, 1, 2],
+          "framePaths": [
+            "/assets/characters/titibaccha/sad/sad_00.png",
+            "/assets/characters/titibaccha/sad/sad_01.png",
+            "/assets/characters/titibaccha/sad/sad_02.png"
+          ],
+          "frameRate": 3,
+          "repeat": -1,
+          "description": "Drooped crest with tearful eyes gazing into the distance"
+        }
+      }
+    },
+    "ronny": {
+      "id": "ronny",
+      "name": "Ronny (Companion Boy)",
+      "defaultFacing": "left",
+      "spritesheetPath": null,
+      "frameSequenceDir": "/assets/characters/ronny/",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "textureFilter": "nearest",
+      "physics": {
+        "width": 40,
+        "height": 70,
+        "offsetX": 76,
+        "offsetY": 106
+      },
+      "animations": {
+        "idle": {
+          "key": "ronny_idle",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+          "framePaths": [
+            "/assets/characters/ronny/idle/idle_00.png",
+            "/assets/characters/ronny/idle/idle_01.png",
+            "/assets/characters/ronny/idle/idle_02.png",
+            "/assets/characters/ronny/idle/idle_03.png",
+            "/assets/characters/ronny/idle/idle_04.png",
+            "/assets/characters/ronny/idle/idle_05.png",
+            "/assets/characters/ronny/idle/idle_06.png",
+            "/assets/characters/ronny/idle/idle_07.png"
+          ],
+          "frameRate": 5,
+          "repeat": -1,
+          "description": "Standing looking into the garden path in cream shirt, muted blue shorts, and green leaf pendant"
+        },
+        "waiting_food": {
+          "key": "ronny_waiting_food",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3],
+          "framePaths": [
+            "/assets/characters/ronny/waiting_food/waiting_food_00.png",
+            "/assets/characters/ronny/waiting_food/waiting_food_01.png",
+            "/assets/characters/ronny/waiting_food/waiting_food_02.png",
+            "/assets/characters/ronny/waiting_food/waiting_food_03.png"
+          ],
+          "frameRate": 4,
+          "repeat": -1,
+          "description": "Kneeling beside traveler pack holding a warm bowl of chick feed"
+        },
+        "feeding": {
+          "key": "ronny_feeding",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 4,
+          "repeat": -1,
+          "description": "Gentle scooping motion scattering seeds onto the grass (Procedural fallback active)"
+        },
+        "surprised": {
+          "key": "ronny_surprised",
+          "format": "frameSequence",
+          "frames": [0, 1, 2, 3, 4],
+          "framePaths": [
+            "/assets/characters/ronny/surprised/surprised_00.png",
+            "/assets/characters/ronny/surprised/surprised_01.png",
+            "/assets/characters/ronny/surprised/surprised_02.png",
+            "/assets/characters/ronny/surprised/surprised_03.png",
+            "/assets/characters/ronny/surprised/surprised_04.png"
+          ],
+          "frameRate": 4,
+          "repeat": 0,
+          "description": "Eyes wide and mouth agape as the Fox steps forward"
+        },
+        "sad": {
+          "key": "ronny_sad",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 2,
+          "repeat": -1,
+          "description": "Dropping the feed scoop, head hung in disbelief and heartbreak (Procedural fallback active)"
+        },
+        "walking_away": {
+          "key": "ronny_walking_away",
+          "format": "procedural",
+          "frames": [0, 1],
+          "framePaths": [],
+          "frameRate": 4,
+          "repeat": -1,
+          "description": "Turning back and walking into the wilderness path (Procedural fallback active)"
+        },
+        "running": {
+          "key": "ronny_running",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 8,
+          "repeat": -1,
+          "description": "Urgent sprint toward safety during meteor disaster (Procedural fallback active)"
+        },
+        "hugging": {
+          "key": "ronny_hugging",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 2,
+          "repeat": -1,
+          "description": "Warm embrace cradle reserved for Chapter 7 reunion (Procedural fallback active)"
+        }
+      }
+    },
+    "fox": {
+      "id": "fox",
+      "name": "The Fox (Deceptive Predator)",
+      "defaultFacing": "left",
+      "spritesheetPath": null,
+      "frameSequenceDir": "/assets/characters/fox/",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "scale": 0.55,
+      "textureFilter": "nearest",
+      "physics": {
+        "width": 60,
+        "height": 40,
+        "offsetX": 66,
+        "offsetY": 136
+      },
+      "animations": {
+        "idle": {
+          "key": "fox_idle",
+          "format": "frameSequence",
+          "frames": [0],
+          "framePaths": [
+            "/assets/characters/fox/idle/idle_05.png"
+          ],
+          "frameRate": 2,
+          "repeat": -1,
+          "description": "Low crouch in hedge with serene expression, orange fur, and large bushy tail"
+        },
+        "walking": {
+          "key": "fox_walking",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 6,
+          "repeat": -1,
+          "description": "Silky silent prowl across the garden grass (Procedural fallback active)"
+        },
+        "attracting": {
+          "key": "fox_attracting",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 4,
+          "repeat": -1,
+          "description": "Nudging glowing golden berries toward Titibaccha (Procedural fallback active)"
+        },
+        "eating": {
+          "key": "fox_eating",
+          "format": "frameSequence",
+          "frames": [0],
+          "framePaths": [
+            "/assets/characters/fox/eating/eating_02.png"
+          ],
+          "frameRate": 4,
+          "repeat": -1,
+          "description": "Crouching and feasting on treats with sharp teeth and sly smirk"
+        },
+        "deceptive": {
+          "key": "fox_deceptive",
+          "format": "procedural",
+          "frames": [0],
+          "framePaths": [],
+          "frameRate": 3,
+          "repeat": -1,
+          "description": "Crooked sly smirk as Ronny disappears into the woods (Procedural fallback active)"
+        }
+      }
+    }
+  }
+}

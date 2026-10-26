@@ -1,0 +1,202 @@
+{
+  "version": "0.2-prototype",
+  "note": "Individual frames auto-segmented from an illustrated sheet. Verify each; anatomy may not be perfectly isolated or animation smooth. Not production-final.",
+  "characters": {
+    "ronny": {
+      "idle": {
+        "frames": [
+          "ronny/idle/idle_00.png",
+          "ronny/idle/idle_01.png",
+          "ronny/idle/idle_02.png",
+          "ronny/idle/idle_03.png",
+          "ronny/idle/idle_04.png",
+          "ronny/idle/idle_05.png",
+          "ronny/idle/idle_06.png",
+          "ronny/idle/idle_07.png",
+          "ronny/idle/idle_08.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "running": {
+        "frames": [
+          "ronny/running/running_00.png",
+          "ronny/running/running_01.png",
+          "ronny/running/running_02.png",
+          "ronny/running/running_03.png",
+          "ronny/running/running_04.png",
+          "ronny/running/running_05.png",
+          "ronny/running/running_06.png",
+          "ronny/running/running_07.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 8,
+        "loop": true
+      },
+      "waiting_food": {
+        "frames": [
+          "ronny/waiting_food/waiting_food_00.png",
+          "ronny/waiting_food/waiting_food_01.png",
+          "ronny/waiting_food/waiting_food_02.png",
+          "ronny/waiting_food/waiting_food_03.png",
+          "ronny/waiting_food/waiting_food_04.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "feeding": {
+        "frames": [
+          "ronny/feeding/feeding_00.png",
+          "ronny/feeding/feeding_01.png",
+          "ronny/feeding/feeding_02.png",
+          "ronny/feeding/feeding_03.png",
+          "ronny/feeding/feeding_04.png",
+          "ronny/feeding/feeding_05.png",
+          "ronny/feeding/feeding_06.png",
+          "ronny/feeding/feeding_07.png",
+          "ronny/feeding/feeding_08.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "surprised": {
+        "frames": [
+          "ronny/surprised/surprised_00.png",
+          "ronny/surprised/surprised_01.png",
+          "ronny/surprised/surprised_02.png",
+          "ronny/surprised/surprised_03.png",
+          "ronny/surprised/surprised_04.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": false
+      },
+      "sad": {
+        "frames": [
+          "ronny/sad/sad_00.png",
+          "ronny/sad/sad_01.png",
+          "ronny/sad/sad_02.png",
+          "ronny/sad/sad_03.png",
+          "ronny/sad/sad_04.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "walking_away": {
+        "frames": [
+          "ronny/walking_away/walking_away_00.png",
+          "ronny/walking_away/walking_away_01.png",
+          "ronny/walking_away/walking_away_02.png",
+          "ronny/walking_away/walking_away_03.png",
+          "ronny/walking_away/walking_away_04.png",
+          "ronny/walking_away/walking_away_05.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 8,
+        "loop": true
+      },
+      "hugging": {
+        "frames": [
+          "ronny/hugging/hugging_00.png",
+          "ronny/hugging/hugging_01.png",
+          "ronny/hugging/hugging_02.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": false
+      }
+    },
+    "fox": {
+      "idle": {
+        "frames": [
+          "fox/idle/idle_00.png",
+          "fox/idle/idle_01.png",
+          "fox/idle/idle_02.png",
+          "fox/idle/idle_03.png",
+          "fox/idle/idle_04.png",
+          "fox/idle/idle_05.png",
+          "fox/idle/idle_06.png",
+          "fox/idle/idle_07.png",
+          "fox/idle/idle_08.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "walking": {
+        "frames": [
+          "fox/walking/walking_00.png",
+          "fox/walking/walking_01.png",
+          "fox/walking/walking_02.png",
+          "fox/walking/walking_03.png",
+          "fox/walking/walking_04.png",
+          "fox/walking/walking_05.png",
+          "fox/walking/walking_06.png",
+          "fox/walking/walking_07.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 8,
+        "loop": true
+      },
+      "attracting": {
+        "frames": [
+          "fox/attracting/attracting_00.png",
+          "fox/attracting/attracting_01.png",
+          "fox/attracting/attracting_02.png",
+          "fox/attracting/attracting_03.png",
+          "fox/attracting/attracting_04.png",
+          "fox/attracting/attracting_05.png",
+          "fox/attracting/attracting_06.png",
+          "fox/attracting/attracting_07.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "eating": {
+        "frames": [
+          "fox/eating/eating_00.png",
+          "fox/eating/eating_01.png",
+          "fox/eating/eating_02.png",
+          "fox/eating/eating_03.png",
+          "fox/eating/eating_04.png",
+          "fox/eating/eating_05.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      },
+      "deceptive": {
+        "frames": [
+          "fox/deceptive/deceptive_00.png",
+          "fox/deceptive/deceptive_01.png",
+          "fox/deceptive/deceptive_02.png",
+          "fox/deceptive/deceptive_03.png",
+          "fox/deceptive/deceptive_04.png",
+          "fox/deceptive/deceptive_05.png",
+          "fox/deceptive/deceptive_06.png"
+        ],
+        "frameWidth": 192,
+        "frameHeight": 192,
+        "fps": 5,
+        "loop": true
+      }
+    }
+  }
+}
